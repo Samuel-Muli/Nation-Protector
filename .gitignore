@@ -1,0 +1,8 @@
+node_modules
+package-lock.json
+guru.data.json
+database.json
+/session/*
+!/session/.gitkeep
+!/session/file
+session.json

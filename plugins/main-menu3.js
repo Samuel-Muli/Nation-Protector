@@ -1,0 +1,573 @@
+import {
+    promises,
+    readFileSync
+   } from "fs"
+   import {
+    join
+   } from "path"
+   import {
+    xpRange
+   } from "../lib/levelling.js"
+   import moment from "moment-timezone"
+   import os from "os"
+
+  
+   let groupmenu = `
+   ✦ ───『 *group* 』─── ⚝
+  ➫ .getbio <@tag/reply>  Ⓛ
+  ➫ .animequote
+  ➫ .Setdesc <text>
+  ➫ .setname <text>
+  ➫ .add
+  ➫ .delete
+  ➫ .delwarn @user
+  ➫ .demote (@tag)
+  ➫ .infogp
+  ➫ .hidetag
+  ➫ .invite <917xxx>
+  ➫ .kick @user
+  ➫ .link
+  ➫ .poll question|option|option
+  ➫ .profile
+  ➫ .promote
+  ➫ .resetlink
+  ➫ .setbye <text>
+  ➫ .group *open/close*
+  ➫ .setwelcome <text>
+  ➫ .simulate <event> @user
+  ➫ .staff
+  ➫ .tagall
+  ➫ .totag
+  ➫ .warn @user
+  ➫ .warns
+  ➫ .main
+  ╰──────────⳹`
+  
+  let ownermenu = `
+  ✦ ───『 *owner* 』─── ⚝
+  ◈ .addprem <@tag>
+  ◈ .addowner @user
+  ◈ .allow <@tag>
+  ◈ .HEROKU
+  ◈ .ban @user
+  ◈ .banchat
+  ◈ .tx
+  ◈ .broadcastgroup <text>
+  ◈ .bcgc <text>
+  ◈ .cleartmp
+  ◈ .delexpired
+  ◈ .delprem @user
+  ◈ .removeowner @user
+  ◈ .setppbotfull
+  ◈ .getplugin <name file>
+  ◈ .getfile <name file>
+  ◈ .join <chat.whatsapp.com> <dias>
+  ◈ .reset <54xxx>
+  ◈ .resetprefix
+  ◈ .restart
+  ◈ .setprefix [symbol]
+  ◈ .unban @user
+  ◈ .unbanchat
+  ◈ .update
+  ◈ .config
+  ◈ .listban
+  ◈ .deleteplugin <name>
+  ╰──────────⳹`
+  
+  let funmenu = `
+  ✦ ───『 *fun* 』─── ⚝
+  ◈ .afk <reason>
+  ◈ .tomp3
+  ◈ .toav
+  ◈ .bot
+  ◈ .character @tag
+  ◈ .dare
+  ◈ .flirt
+  ◈ .gay @user
+  ◈ .pickupline
+  ◈ .question
+  ◈ .shayari
+  ◈ .ship
+  ◈ .yomamajoke
+  ◈ .truth
+  ◈ .waste @user
+  ◈ .image
+  ◈ .meme
+  ◈ .quote
+  ╰──────────⳹`
+  
+  let reactmenu = `
+  ✦ ───『 *reaction* 』─── ⚝
+  ◈ .bully @tag
+  ◈ .cuddle @tag
+  ◈ .cry @tag
+  ◈ .hug @tag
+  ◈ .awoo @tag
+  ◈ .kiss @tag
+  ◈ .lick @tag
+  ◈ .pat @tag
+  ◈ .smug @tag
+  ◈ .bonk @tag
+  ◈ .yeet @tag
+  ◈ .blush @tag
+  ◈ .smile @tag
+  ◈ .wave @tag
+  ◈ .highfive @tag
+  ◈ .handhold @tag
+  ◈ .nom @tag
+  ◈ .bite @tag
+  ◈ .glomp @tag
+  ◈ .slap @tag
+  ◈ .kill @tag
+  ◈ .happy @tag
+  ◈ .wink @tag
+  ◈ .poke @tag
+  ◈ .dance @tag
+  ◈ .cringe @tag
+  ╰──────────⳹`
+  
+  let dlmenu = `
+  ✦ ───『 *downloader* 』─── ⚝
+  ◈ .facebook <url>
+  ◈ .gdrive 🅟
+  ◈ .gitclone <url>
+  ◈ .igstalk
+  ◈ .instagram
+  ◈ .mediafire <url>
+  ◈ .mega
+  ◈ .play <query>
+  ◈ .play2 <text>
+  ◈ .playvid <text>
+  ◈ .spotify
+  ◈ .tiktok <url>
+  ◈ .tiktokstalk
+  ◈ .twitter <url>
+  ◈ .ytmp3 <url>
+  ◈ .ytsearch
+  ◈ .ytmp4 <yt-link>
+  ◈ .wallpaper <query>
+  ╰──────────⳹`
+  
+  let gamemenu = `
+  ✦ ───『 *game* 』─── ⚝
+  ◈ .slot <amount>
+  ◈ .chess [from to]
+  ◈ .chess delete
+  ◈ .chess join
+  ◈ .chess start
+  ◈ .delttt
+  ◈ .guessflag
+  ◈ .Maths <modes>
+  ◈ .ppt <rock/paper/scissors>
+  ◈ .tictactoe <tag number>
+  ╰──────────⳹`
+  let stickermenu = `
+  ✦ ───『 *maker* 』─── ⚝
+  ◈ .blur
+  ◈ .difuminar2
+  ◈ .hornycard
+  ◈ .hornylicense
+  ◈ .simpcard
+  ◈ .itssostupid
+  ◈ .iss
+  ◈ .stupid
+  ◈ .tweet <comment>
+  ◈ .lolicon
+  ◈ .ytcomment <comment>
+  ╰──────────⳹`
+  
+  let newsmenu = `
+  ✦ ───『 *news* 』─── ⚝
+  ◈ .technews
+  ◈ .ndtv
+  ╰──────────⳹
+  `
+  let economy = `
+  ✦ ───『 *economy* 』─── ⚝
+  ◈ .addgold <@user>
+  ◈ .addxp <@user>
+  ◈ .bank
+  ◈ .buych
+  ◈ .cock-fight <amount>
+  ◈ .buy
+  ◈ .buyall
+  ◈ .daily
+  ◈ .deposit
+  ◈ .gamble <amount> <color(red/black)>
+  ◈ .give credit [amount] [@tag]
+  ◈ .levelup
+  ◈ .rank
+  ◈ .rob
+  ◈ .roulette <amount> <color(red/black)>
+  ◈ .wallet
+  ◈ .withdraw
+  ◈ .work
+  ╰──────────⳹`
+  let animemenu = `
+  ✦ ───『 *anime* 』─── ⚝
+  ◈ .anime
+  ◈ .akira
+  ◈ .akiyama
+  ◈ .anna
+  ◈ .asuna
+  ◈ .ayuzawa
+  ◈ .boruto
+  ◈ .chiho
+  ◈ .chitoge
+  ◈ .deidara
+  ◈ .erza
+  ◈ .elaina
+  ◈ .eba
+  ◈ .emilia
+  ◈ .hestia
+  ◈ .hinata
+  ◈ .inori
+  ◈ .isuzu
+  ◈ .itachi
+  ◈ .itori
+  ◈ .kaga
+  ◈ .kagura
+  ◈ .kaori
+  ◈ .keneki
+  ◈ .kotori
+  ◈ .kurumi
+  ◈ .madara
+  ◈ .mikasa
+  ◈ .miku
+  ◈ .minato
+  ◈ .naruto
+  ◈ .nezuko
+  ◈ .sagiri
+  ◈ .sasuke
+  ◈ .sakura
+  ◈ .manhwa
+  ◈ .waifu
+  ◈ .neko
+  ◈ .zerotwo
+  ◈ .loli
+  ◈ .pokedex <pokemon>
+  ╰──────────⳹
+  `
+  let toolsmenu = `
+  ✦ ───『 *tools* 』─── ⚝
+  ◈ .nowa
+  ◈ .readvo
+  ◈ .removebg
+  ◈ .ss <url>
+  ◈ .ssf <url>
+  ◈ .tourl
+  ◈ .translate <lang> <text>
+  ◈ .true
+  ◈ .tts <lang> <task>
+  ◈ .wa
+  ╰──────────⳹`
+  
+  let Aimenu = `
+  ✦ ───『 *AI* 』─── ⚝
+  ◈ .bing
+  ◈ .dalle
+  ◈ .chatgpt
+  ◈ .toanime
+  ◈ .gpt
+  ◈ .gpt4
+  ◈ .tocartoon
+  ◈ .ai
+  ◈ .bard
+  ◈ .alexa
+  ╰──────────⳹
+  `
+  let religionmenu = `
+    ✦ ───『 *plugin* 』─── ⚝
+  ◈ .plugins
+  ◈ .install <Gist URL>
+  ╰──────────⳹`
+  
+  let botmenu = `
+  ✦ ───『 *Bot Menu* 』─── ⚝
+  ◈ .ping
+  ◈ .runtime
+  ◈ .script
+  ◈ .server
+  ◈ .blocklist
+  ◈ .alive
+  ◈ .owner
+  ◈ .list
+  ◈ .messi
+  ◈ .cristianoronaldo
+  ◈ .cr7
+  ◈ .ppcouple
+  ╰──────────⳹
+  `
+  let pluginmenu = `
+  ✦ ───『 *plugin* 』─── ⚝
+  ◈ .plugins
+  ◈ .install <Gist URL>
+  ╰──────────⳹
+  `
+
+  const handler = async (m, {
+    conn,
+    command,
+    text,
+    args,
+    usedPrefix
+  }) => {
+    
+  
+   let glb = global.db.data.users
+   let usrs = glb[m.sender]
+   let tag = `@${m.sender.split("@")[0]}`
+   let mode = global.opts["self"] ? "Private" : "Public"
+   
+   let {
+  age,
+  exp,
+  limit,
+  level,
+  role,
+  registered,
+  credit
+   } = glb[m.sender]
+   let {
+  min,
+  xp,
+  max
+   } = xpRange(level, global.multiplier)
+   let name = await conn.getName(m.sender)
+   let premium = glb[m.sender].premiumTime
+   let prems = `${premium > 0 ? "Premium": "Free"}`
+   let platform = os.platform()
+  
+  
+   let ucpn = `${ucapan()}`
+  
+   let _uptime = process.uptime() * 1000
+   let _muptime
+   if (process.send) {
+  process.send("uptime")
+  _muptime = await new Promise(resolve => {
+  process.once("message", resolve)
+  setTimeout(resolve, 1000)
+  }) * 1000
+   }
+   let muptime = clockString(_muptime)
+   let uptime = clockString(_uptime)
+  
+   
+   let totalfeatures = Object.values(global.plugins).filter((v) => v.help && v.tags).length;
+   let totalreg = Object.keys(glb).length
+  
+    conn.gurumenu = conn.gurumenu ? conn.gurumenu : {};
+    
+   
+    global.fcontact = { key: { fromMe: false, participant: `0@s.whatsapp.net`, remoteJid: 'status@broadcast' }, message: { contactMessage: { displayName: `${name}`, vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;a,;;;\nFN:${name}\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`}}}
+    const infoText = `
+  「 ${botname} 🎁XMD 」\n
+  ┌─❖
+  │ *_Hi_* 👋 
+  └┬❖ *_${name}_* friend
+  ┌┤✑ *${ucpn}* 😄
+  │└────────────┈ ⳹
+  │
+  └─ 𝞑𝞗𝙏 𝞘𝞜𝙁𝞗
+  │𝐁𝐎𝐓 : ${botname}
+  │𝐌𝐨𝐝𝐞 : ${mode}
+  │𝐏𝐥𝐚𝐭𝐟𝐨𝐫𝐦 : ${platform}
+  │𝐇𝐨𝐬𝐭 : Kali linux
+  │𝐓𝐲𝐩𝐞 : NodeJs
+  │𝐁𝐚𝐢𝐥𝐞𝐲𝐬 : Multi Device
+  │𝐏𝐫𝐞𝐟𝐢𝐱 : [ *${usedPrefix}* ]
+  │𝐒𝐩𝐞𝐞𝐝 : 0.00001 miliseconds
+  │𝐑𝐮𝐧𝐭𝐢𝐦𝐞 : ${muptime}
+  │𝐃𝐚𝐭𝐚𝐛𝐚𝐬𝐞 : ${totalreg}
+  │  ${readMore}
+  └─ 𝙐𝙎𝞢𝞒 𝞘𝞜𝙁𝞗
+  │𝐍𝐚𝐦𝐞 : ${name}
+  │𝐆𝐨𝐥𝐝 : ${credit}
+  │𝐑𝐨𝐥𝐞 : ${role}
+  │𝐋𝐞𝐯𝐞𝐥 : ${level}
+  │𝐗𝐩 : ${exp}
+  │
+  └─ 𝞘𝞜𝙁𝞗 𝘾𝞛𝘿
+  │ *${totalfeatures}* Commands
+  │
+  └─ 𝞘𝞜𝙁𝞗 
+  │ *_Reply With the Number_*
+  │ *_To Get Respected Menu_*
+  │${readMore}
+  ┬────────────┈ ⳹
+  │✑  Please Reply *MENU Number*
+  │✑  Given *BELOW*
+┌──────────────┈ ⳹
+│ *1.*  ❏ Bot Menu
+│ *2.*  ❏ Owner Menu
+│ *3.*  ❏ Group Menu
+│ *4.*  ❏ Fun Menu
+│ *5.*  ❏ Reaction Menu
+│ *6.*  ❏ Downloader Menu
+│ *7.*  ❏ Game Menu
+│ *10.* ❏ Audio Menu
+│ *11.* ❏ News Menu
+│ *12.* ❏ Economy Menu 
+│ *15.* ❏ Tools Menu 
+│ *16.* ❏ Ai Menu 
+│ *17.* ❏ Plugin Menu 
+└─────────────────┈⳹
+ ${readMore}` 
+;
+
+  
+  const { result, key, timeout } = await conn.sendMessage(m.chat, { video: { url: menuvid }, caption: infoText.trim(),  gifPlayback: true,
+  gifAttribution: 0}, { quoted: fcontact })
+  
+  // Save the menu options to gurumenu
+  conn.gurumenu[m.sender] = {
+    result,
+    key,
+    timeout: setTimeout(() => {
+      conn.sendMessage(m.chat, {
+          delete: key
+      });
+      delete conn.gurumenu[m.sender];
+  }, 60 * 1000),
+  };
+  };
+  
+ 
+  handler.before = async (m, { conn }) => {
+    conn.gurumenu = conn.gurumenu ? conn.gurumenu : {};
+    if (m.isBaileys || !(m.sender in conn.gurumenu)) return;
+    const { result, key, timeout } = conn.gurumenu[m.sender];
+    if (!m.quoted || m.quoted.id !== key.id || !m.text) return;
+    const choice = m.text.trim();
+    
+    if (choice === "1") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: botmenu
+      }, { quoted:fcontact });
+      } else if (choice === "2") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: ownermenu
+      }, { quoted:fcontact });
+      } else if (choice === "3") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: groupmenu
+      }, { quoted:fcontact });
+      } else if (choice === "4") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: funmenu
+      }, { quoted:fcontact });
+      } else if (choice === "5") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: reactmenu
+      }, { quoted:fcontact });
+      } else if (choice === "6") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: dlmenu
+      }, { quoted:fcontact });
+      } else if (choice === "7") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: gamemenu
+      }, { quoted:fcontact });
+      } else if (choice === "8") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: logomenu
+      }, { quoted:fcontact });
+      } else if (choice === "9") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: stickermenu
+      }, { quoted:fcontact });
+      } else if (choice === "10") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: audiomenu
+      }, { quoted:fcontact });
+      } else if (choice === "11") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: newsmenu
+      }, { quoted:fcontact });
+      } else if (choice === "12") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: economy
+      }, { quoted:fcontact });
+      } else if (choice === "13") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: animemenu
+      }, { quoted:fcontact });
+      } else if (choice === "14") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: nsfwmenu
+      }, { quoted:fcontact });
+      } else if (choice === "15") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: toolsmenu
+      }, { quoted:fcontact });
+      } else if (choice === "16") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: Aimenu
+      }, { quoted:fcontact });
+      } else if (choice === "17") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: religionmenu
+      }, { quoted:fcontact });
+      } else if (choice === "18") {
+        await conn.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/087410e10ba5b08083295.jpg' },
+        caption: pluginmenu
+      }, { quoted:fcontact });
+      } else {
+        m.reply('Invalid choice. Please reply with a valid number.');
+      }
+  
+  };
+  
+  
+  handler.help = ["menu3"];      //inconviniences in this section
+  handler.tags = ["main"];
+  handler.command = /^(menu3)$/i;
+  handler.limit = true;
+  export default handler;
+  
+  
+  
+  
+  function pickRandom(list) {
+    return list[Math.floor(Math.random() * list.length)]
+   }
+   
+   const more = String.fromCharCode(8206)
+   const readMore = more.repeat(4001)
+   
+   function clockString(ms) {
+    let h = isNaN(ms) ? "--" : Math.floor(ms / 3600000)
+    let m = isNaN(ms) ? "--" : Math.floor(ms / 60000) % 60
+    let s = isNaN(ms) ? "--" : Math.floor(ms / 1000) % 60
+    return [h, " H ", m, " M ", s, " S "].map(v => v.toString().padStart(2, 0)).join("")
+   }
+   
+   function clockStringP(ms) {
+    let ye = isNaN(ms) ? "--" : Math.floor(ms / 31104000000) % 10
+    let mo = isNaN(ms) ? "--" : Math.floor(ms / 2592000000) % 12
+    let d = isNaN(ms) ? "--" : Math.floor(ms / 86400000) % 30
+    let h = isNaN(ms) ? "--" : Math.floor(ms / 3600000) % 24
+    let m = isNaN(ms) ? "--" : Math.floor(ms / 60000) % 60
+    let s = isNaN(ms) ? "--" : Math.floor(ms / 1000) % 60
+    return [ye, " *Years 🗓️*\n", mo, " *Month 🌙*\n", d, " *Days ☀️*\n", h, " *Hours 🕐*\n", m, " *Minute ⏰*\n", s, " *Second ⏱️*"].map(v => v.toString().padStart(2, 0)).join("")
+   }
+   
+   function ucapan() {
+    const time = moment.tz("Asia/Kolkata").format("HH")
+    let res = "Good morning ☀️"
+    if (time >= 4) {
+     res = "Good Morning 🌄"
+    }
+    if (time >= 10) {
+     res = "Good Afternoon ☀️"
+    }
+    if (time >= 15) {
+     res = "Good Afternoon 🌇"
+    }
+    if (time >= 18) {
+     res = "Good Night 🌙"
+    }
+    return res
+   }
+  
