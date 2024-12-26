@@ -6,3 +6,4 @@ database.json
 !/session/.gitkeep
 !/session/file
 session.json
+.env
