@@ -56,7 +56,7 @@ let handler = async (m, { conn }) => {
   let user = global.db.data.users[who];
 
   try {
-    let repo_Data = await axios.get('https://api.github.com/repos/Samuel-Muli/XLICON-V2-MD');
+    let repo_Data = await axios.get('https://github.com/muli-tech/The-Great');
     let { stargazers_count, forks, owner, created_at, html_url } = repo_Data.data;
 
     let infobt = `

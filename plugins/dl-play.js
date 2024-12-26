@@ -7,9 +7,13 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   await m.reply("🔄 searching the audio...");
   try {
     const search = await ytSearch(text); // Search for the video
+    if (!search || !search.videos || search.videos.length === 0) {
+      return m.reply("❌ No results found! Please try again with a different query.");
+    }
+
     const video = search.videos[0];
 
-    if (!video) return m.reply("❌ No results found! Please try again with a different query.");
+    if (!video) return m.reply("❌ No video found! Please try again.");
     if (video.seconds >= 3600) return m.reply("❌ Video duration exceeds 1 hour. Please choose a shorter video!");
 
     // Attempt to get the audio URL
