@@ -95,7 +95,7 @@ export async function handler(chatUpdate) {
       let chat = global.db.data.chats[m.chat]
       if (typeof chat !== 'object') global.db.data.chats[m.chat] = {}
       if (chat) {
-        if (!('antidelete' in chat)) chat.antidelete = false
+        if (!('antiDelete' in chat)) chat.antiDelete = true
         if (!('antiLink' in chat)) chat.antiLink = false
         if (!('antiSticker' in chat)) chat.antiSticker = false
         if (!('antiToxic' in chat)) chat.antiToxic = false
@@ -116,11 +116,10 @@ export async function handler(chatUpdate) {
         if (!isNumber(chat.expired)) chat.expired = 0
       } else
         global.db.data.chats[m.chat] = {
-          antidelete: false,
+          antiDelete: true,
           antiLink: false,
           antiSticker: false,
           antiToxic: false,
-          autoread: false,
           detect: false,
           expired: 0,
           getmsg: true,
@@ -407,58 +406,41 @@ export async function handler(chatUpdate) {
           __filename,
         }
         try {
-          // Safely call the plugin
-          await Promise.resolve(plugin.call(this, m, extra));
-          
-          if (!isPrems) m.credit = m.credit || plugin.credit || false;
+          await plugin.call(this, m, extra)
+          if (!isPrems) m.credit = m.credit || plugin.credit || false
         } catch (e) {
-          m.error = e;
-          console.error(chalk.red(`❌ Error in plugin: ${m.plugin}`), e);
-        
-          let text = format(e);
-        
-          // Hide sensitive API keys
-          for (let key of Object.values(global.APIKeys)) {
-            text = text.replace(new RegExp(key, 'g'), '#HIDDEN#');
-          }
-        
-          // Report error to developers if e.name exists
-          if (e.name) {
-            try {
+          // Error occured
+          m.error = e
+          console.error(e)
+          if (e) {
+            let text = format(e)
+            for (let key of Object.values(global.APIKeys))
+              text = text.replace(new RegExp(key, 'g'), '#HIDDEN#')
+            if (e.name)
               for (let [jid] of global.owner.filter(
                 ([number, _, isDeveloper]) => isDeveloper && number
               )) {
-                let data = (await this.onWhatsApp(jid))[0] || {};
-                /* if (data.exists) {
-                  await m.reply(
+                let data = (await this.onWhatsApp(jid))[0] || {}
+                if (data.exists)
+                  return m.reply(
                     `*🗂️ Plugin:* ${m.plugin}\n*👤 Sender:* ${m.sender}\n*💬 Chat:* ${m.chat}\n*💻 Command:* ${usedPrefix}${command} ${args.join(' ')}\n📄 *Error Logs:*\n\n${text}`.trim(),
                     data.jid
-                  );
-                } */
+                  )
               }
-            } catch (err) {
-              //console.error(chalk.yellow("⚠️ Failed to notify developer"), err);
-            }
+            m.reply(text)
           }
-        
-          // Reply error message to the user
-          m.reply(text || "⚠️ An unknown error occurred.");
         } finally {
-          // Safely call plugin.after
+          // m.reply(util.format(_user))
           if (typeof plugin.after === 'function') {
             try {
-              await Promise.resolve(plugin.after.call(this, m, extra));
+              await plugin.after.call(this, m, extra)
             } catch (e) {
-              console.error(chalk.red(`❌ Error in plugin.after: ${m.plugin}`), e);
+              console.error(e)
             }
           }
-        
-          // Respond with credit info
-          if (m.credit) {
-            m.reply(`You used *${+m.credit}*`);
-          }
+          if (m.credit) m.reply(`You used *${+m.credit}*`)
         }
-        
+        break
       }
     }
   } catch (e) {
@@ -509,8 +491,7 @@ export async function handler(chatUpdate) {
     } catch (e) {
       console.log(m, m.quoted, e)
     }
-    
-    //if (process.env.autoread) await conn.readMessages([m.key]) //incase things go south come back here
+    if (process.env.autoRead) await conn.readMessages([m.key])
     if (process.env.statusview && m.key.remoteJid === 'status@broadcast')
       await conn.readMessages([m.key])
   }
@@ -545,8 +526,8 @@ export async function participantsUpdate({ id, participants, action }) {
             ppgp = await this.profilePictureUrl(id, 'image')
           } catch (error) {
             console.error(`Error retrieving profile picture: ${error}`)
-            pp = 'https://i.imgur.com/MTHXjf3.jpeg' // Assign default image URL
-            ppgp = 'https://i.imgur.com/MTHXjf3.jpeg' // Assign default image URL
+            pp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
+            ppgp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
           } finally {
             let text = (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user')
               .replace('@group', await this.getName(id))
@@ -563,7 +544,7 @@ export async function participantsUpdate({ id, participants, action }) {
             )}&memberCount=${encodeURIComponent(
               nthMember.toString()
             )}&avatar=${encodeURIComponent(pp)}&background=${encodeURIComponent(
-              'https://i.imgur.com/MTHXjf3.jpeg'
+              'https://i.ibb.co/VVdrZLm/502d5d69-6535-4092-be10-cb1b81514b46.jpg'
             )}`
 
             try {
@@ -575,10 +556,10 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'THE ‖⫷※•şɐɱʉ•※⫸‖-BOT',
+                    title: 'THE XLICON-BOT',
                     body: 'welcome to Group',
                     thumbnailUrl: welcomeApiUrl,
-                    sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
+                    sourceUrl: 'https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
                     mediaType: 1,
                     renderLargerThumbnail: true,
                   },
@@ -602,8 +583,8 @@ export async function participantsUpdate({ id, participants, action }) {
             ppgp = await this.profilePictureUrl(id, 'image')
           } catch (error) {
             console.error(`Error retrieving profile picture: ${error}`)
-            pp = 'https://i.imgur.com/MTHXjf3.jpeg' // Assign default image URL
-            ppgp = 'https://i.imgur.com/MTHXjf3.jpeg' // Assign default image URL
+            pp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
+            ppgp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
           } finally {
             let text = (chat.sBye || this.bye || conn.bye || 'HELLO, @user').replace(
               '@user',
@@ -620,7 +601,7 @@ export async function participantsUpdate({ id, participants, action }) {
             )}&memberCount=${encodeURIComponent(
               nthMember.toString()
             )}&avatar=${encodeURIComponent(pp)}&background=${encodeURIComponent(
-              'https://i.imgur.com/MTHXjf3.jpeg'
+              'https://i.ibb.co/VVdrZLm/502d5d69-6535-4092-be10-cb1b81514b46.jpg'
             )}`
 
             try {
@@ -632,10 +613,10 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'THE ‖⫷※•şɐɱʉ•※⫸‖ BOT',
+                    title: 'THE XLICON BOT',
                     body: 'Goodbye from  Group',
                     thumbnailUrl: leaveApiUrl,
-                    sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
+                    sourceUrl: 'https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
                     mediaType: 1,
                     renderLargerThumbnail: true,
                   },
@@ -860,7 +841,7 @@ export async function presenceUpdate(presenceUpdate) {
 dfail
  */
 global.dfail = (type, m, conn) => {
-  const userTag = `👋 Hi *@${m.sender.split('@')[0]}*, `
+  const userTag = `👋 Hai *@${m.sender.split('@')[0]}*, `
   const emoji = {
     general: '⚙️',
     owner: '👑',

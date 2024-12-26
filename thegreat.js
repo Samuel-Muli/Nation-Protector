@@ -339,11 +339,11 @@ if (!opts['test']) {
     setInterval(async () => {
       if (global.db.data) await global.db.write()
       if (opts['autocleartmp'] && (global.support || {}).find)
-        (tmp = [os.tmpdir(), 'tmp']),
-          tmp.forEach(filename =>
-            cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])
-          )
-    }, 30 * 1000)
+      (tmp = [os.tmpdir(), 'tmp']),
+        tmp.forEach(filename =>
+        cp.spawn('find', [filename, '-amin', '5', '-type', 'f', '-delete'])
+        )
+    }, 5 * 60 * 1000)
   }
 }
 

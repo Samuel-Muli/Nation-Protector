@@ -5,8 +5,8 @@ let handler = async (m, { conn }) => {
 ${txt}
 `.trim())
 }
-handler.help = ['xglist', 'grouplists']
-handler.tags = ['info']
+handler.help = ['grouplists']
+handler.tags = ['group']
 handler.command = /^(groupx(s|list))$/i
 
 export default handler

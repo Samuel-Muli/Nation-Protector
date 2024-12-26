@@ -182,7 +182,7 @@ let handler = async (m, { conn }) => {
 }
 
 handler.help = ['gay', 'wasted','jail'];
-handler.tags = ['fun'];
+handler.tags = ['maker'];
 handler.command = ['gay', 'wasted','jail'];
 
 export default handler;

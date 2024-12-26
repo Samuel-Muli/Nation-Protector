@@ -62,6 +62,6 @@ let handler = async (messageContext, { conn, args, usedPrefix, command }) => {
 
 handler.help = ["tiktok"];
 handler.tags = ["tools"];
-handler.command = /^(tiktok|tt|tiktokdl|tiktokslide|tiktoknowm|tiktokvid|ttdl)$/i;
+handler.command = /^(tiktok|tiktokdl|tiktokslide|tiktoknowm|tiktokvid|ttdl)$/i;
 
 export default handler;
