@@ -1,5 +1,5 @@
-#Hapana jaribu guza hii file
-#I debugged it for 2 days
+# Hapana jaribu guza hii file
+# I debugged it for 2 days
 FROM fedora:37
 
 # Update system and install required packages
@@ -10,11 +10,7 @@ RUN dnf -y update && \
     dnf install -y git ffmpeg ImageMagick libwebp yarnpkg && \
     dnf clean all -y
 
-#install yarn just incase
-#RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo
-#RUN dnf install -y yarn
-
-#unistall nodejs
+# Uninstall nodejs
 RUN dnf -y remove nodejs
 
 # Install Node.js 20 from NodeSource
@@ -22,17 +18,21 @@ RUN curl -sL https://rpm.nodesource.com/setup_20.x | bash - && \
     dnf install -y nodejs && \
     dnf clean all -y
 
+# Ensure the /Nation-Protector directory exists and clear contents except node_modules
+RUN mkdir -p /Nation-Protector && \
+    find /Nation-Protector -mindepth 1 -not -path "/Nation-Protector/node_modules*" -delete
+
 # Clone the repository
-RUN git clone https://github.com/muli-tech/The-Great
+RUN git clone https://github.com/Samuel-Muli/Nation-Protector.git
 
 # Set the working directory
-WORKDIR /The-Great
+WORKDIR /Nation-Protector
 
-# Ensure the /The-Great/tmp directory exists
-RUN mkdir -p /The-Great/tmp
+# Ensure the /Nation-Protector/tmp directory exists
+RUN mkdir -p /Nation-Protector/tmp
 
-# Set permissions to give full access to the entire /The-Great directory
-RUN chmod -R 777 /The-Great
+# Set permissions to give full access to the entire /Nation-Protector directory
+RUN chmod -R 777 /Nation-Protector
 
 # Remove yarn if already installed
 RUN dnf remove -y yarn || true
@@ -42,8 +42,8 @@ RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.re
     dnf install -y yarn
 
 # Copy the package.json and yarn.lock files (optional: copy package-lock.json if using npm)
-COPY package.json ./
-#COPY yarn.lock ./
+COPY package.json ./ 
+#COPY yarn.lock ./ 
 #COPY package-lock.json ./
 
 # Install dependencies with Yarn (or npm if Yarn is not installed)
