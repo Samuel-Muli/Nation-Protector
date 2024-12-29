@@ -1,4 +1,4 @@
-import {fbdown, igdl, ttdl, twitter } from "btch-downloader";
+/* import {fbdown, igdl, ttdl, twitter } from "btch-downloader";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
@@ -183,3 +183,4 @@ handler.tags = ["downloader"];
 handler.command = /^(ytmp4|fb|ig|tt|x)$/i;
 
 export default handler;
+ */
