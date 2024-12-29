@@ -1,5 +1,4 @@
-import ytSearch from "yt-search";
-import { youtube, fbdown, igdl, ttdl, twitter } from "btch-downloader";
+import {fbdown, igdl, ttdl, twitter } from "btch-downloader";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
@@ -13,11 +12,6 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) return m.reply(`Enter the title or link!\nExample: *${usedPrefix + command} https://example.com/video*`);
 
   switch (command) {
-    case 'video':
-        case 'ytmp4':
-      await handleYoutube(m, conn, text);
-      break;
-
     case 'fb':
       await handleFacebook(m, conn, text);
       break;
@@ -57,7 +51,7 @@ const downloadFile = async (url, filename) => {
   });
 };
 
-// YouTube Handler
+// YouTube Handler //keep this just incase the btch-downlader API wakes up
 const handleYoutube = async (m, conn, text) => {
   await m.reply("🔄 Searching for the video...");
   try {
@@ -184,8 +178,8 @@ const handleTwitter = async (m, conn, url) => {
 };
 
 // Command Configurations
-handler.help = ["video", "fb", "ig", "tt", "x"];
+handler.help = ["fb", "ig", "tt", "x"];
 handler.tags = ["downloader"];
-handler.command = /^(video|ytmp4|fb|ig|tt|x)$/i;
+handler.command = /^(ytmp4|fb|ig|tt|x)$/i;
 
 export default handler;

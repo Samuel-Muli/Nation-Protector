@@ -70,6 +70,7 @@ break;
 ┗━━━ʕ•㉨•ʔ━━━┛`; // 
           break;
           case 'groupmenu':
+            case 'gpmenu':
           lkr = `
 ╭─────────────────⍟
 ┃ ‖⫷※•şɐɱʉ•※⫸‖ 𝙂𝙍𝙊𝙐𝙋 𝙈𝙀𝙉𝙐 
@@ -105,21 +106,13 @@ break;
 ┏━━━ʕ•㉨•ʔ━━━┓
 ┃➣📡 _${usedPrefix}play_
 ┃➣📡 _${usedPrefix}song_
-┃➣📡 _${usedPrefix}yta <link>_
-┃➣📡 _${usedPrefix}ytv <link>_
-┃➣📡 _${usedPrefix}ytmp3 <link>_
-┃➣📡 _${usedPrefix}ytmp4 <link>_
 ┃➣📡 _${usedPrefix}gimage_
-┃➣📡 _${usedPrefix}pinterest_
-┃➣📡 _${usedPrefix}mediafire <link>_
-┃➣📡 _${usedPrefix}gdrive <link>_
-┃➣📡 _${usedPrefix}gitclone <link>_
-┃➣📡 _${usedPrefix}twitter <link>_
-┃➣📡 _${usedPrefix}tiktok <link>_
+┃➣📡 _${usedPrefix}x <link>_
+┃➣📡 _${usedPrefix}tt <link>_
 ┃➣📡 _${usedPrefix}tiktokstalk_
-┃➣📡 _${usedPrefix}instagram <link>_
+┃➣📡 _${usedPrefix}ig <link>_
 ┃➣📡 _${usedPrefix}spotify_
-┃➣📡 _${usedPrefix}facebook <link>_
+┃➣📡 _${usedPrefix}fb <link>_
 ┗━━━ʕ•㉨•ʔ━━━┛`; // 
           break;
           case 'economymenu':
@@ -129,10 +122,10 @@ break;
 ╰───‖⫷※•şɐɱʉ•※⫸‖─────────⍟
 
 ┏━━━ʕ•㉨•ʔ━━━┓
-┃➣👑 _${usedPrefix}claim/daily_
-┃➣👑 _${usedPrefix}monthly_
+┃➣👑 _${usedPrefix}daily_
+┃➣👑 _${usedPrefix}bank_
 ┃➣👑 _${usedPrefix}leaderboard_
-┃➣👑 _${usedPrefix}shop_
+┃➣👑 _${usedPrefix}rob_
 ┃➣👑 _${usedPrefix}work_
 ┃➣👑 _${usedPrefix}transfer_
 ┗━━━ʕ•㉨•ʔ━━━┛`; // 
@@ -312,8 +305,6 @@ break;
 ╰───‖⫷※•şɐɱʉ•※⫸‖─────────⍟
 
 ┏━━━ʕ•㉨•ʔ━━━┓
-┃➣🧰 _${usedPrefix}autosticker_
-┃➣🧰 _${usedPrefix}pdf_
 ┃➣🧰 _${usedPrefix}whatmusic_
 ┃➣🧰 _${usedPrefix}calc_
 ┃➣🧰 _${usedPrefix}google_
@@ -321,13 +312,9 @@ break;
 ┃➣🧰 _${usedPrefix}readmore_
 ┃➣🧰 _${usedPrefix}ssweb_
 ┃➣🧰 _${usedPrefix}tts_
-┃➣🧰 _${usedPrefix}translate_
 ┃➣🧰 _${usedPrefix}tourl_
 ┃➣🧰 _${usedPrefix}wikipedia_
 ┃➣🧰 _${usedPrefix}nowa_
-┃➣🧰 _${usedPrefix}qrmaker_
-┃➣🧰 _${usedPrefix}readqr_
-┃➣🧰 _${usedPrefix}fancy_
 ┃➣🧰 _${usedPrefix}weather_
 ┃➣🧰 _${usedPrefix}dalle_
 ┃➣🧰 _${usedPrefix}tocartoon_

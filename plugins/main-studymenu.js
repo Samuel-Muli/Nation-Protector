@@ -21,7 +21,7 @@ conn.sendFile(m.chat, pp, 'perfil.jpg', lkr, m, false, { mentions: [who] })
 m.react(done)
 }
 handler.help = ['studymenu']
-handler.tags = ['main']
+handler.tags = ['list']
 handler.command = ['study', 'sd', 'studymenu'] 
 
 export default handler
