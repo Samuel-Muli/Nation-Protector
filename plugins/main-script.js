@@ -3,7 +3,7 @@ import { join } from 'path';
 import axios from 'axios'; 
 
 let handler = async function (m, { conn, __dirname }) {
-  const githubRepoURL = 'https://github.com/muli-tech/The-Great';
+  const githubRepoURL = 'https://github.com/Samuel-Muli/Nation-Protector';
 
   try {
   
@@ -23,6 +23,7 @@ let handler = async function (m, { conn, __dirname }) {
 │ ⭐ *Stars:* _${repoData.stargazers_count}_
 │ 🍴 *Forks:* _${repoData.forks_count}_
 │ 🌐 *URL:* ${repoData.html_url}
+|    *Scan:* https://bot-pair-session.onrender.com
 ╰━━━━━━━━━━━━━━━━━╯
       `.trim();
 

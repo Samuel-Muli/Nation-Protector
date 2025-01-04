@@ -55,9 +55,9 @@ let infobt = `
 │ ➫ *Place   :* Machakos
 │ ➫ *Gender  :*  ᴍᴀʟᴇ
 │ ➫ *Age     :* _24_
-│ ➫ *Phone   :* wa.me/254725074352
+│ ➫ *Phone   :* wa.me/254705244235
 │ ➫ *YouTube :* youtube.com/ 
-│ ➫ *GitHub  :* https://github.com/muli-tech/The-Great
+│ ➫ *GitHub  :* https://github.com/Samuel-Muli
 │ ➫ *IG ID   :* instagram.com/
 │ ➫ *Channel* :https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0
 │ ➫ *Status  :* _Having a Date_

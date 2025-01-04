@@ -65,7 +65,7 @@ async function main() {
   const txt = process.env.SESSION_ID
 
   if (!txt) {
-    console.error('Environment variable not found.')
+    console.error('Not session ID in .env please add or scan the QR in terminal.')
     return
   }
 

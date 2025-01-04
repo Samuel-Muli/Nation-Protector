@@ -56,7 +56,7 @@ let handler = async (m, { conn }) => {
   let user = global.db.data.users[who];
 
   try {
-    let repo_Data = await axios.get('https://github.com/muli-tech/The-Great');
+    let repo_Data = await axios.get('https://github.com/Samuel-Muli/Nation-Protector');
     let { stargazers_count, forks, owner, created_at, html_url } = repo_Data.data;
 
     let infobt = `
@@ -67,7 +67,7 @@ let handler = async (m, { conn }) => {
 *❲❒❳ Author:* *Samuel Muli* 😎
 *❲❒❳ Create:* ${created_at} 
 *❲❒❳ Repo:* ${html_url}
-*❲❒❳ Scan:* to be updated soon
+*❲❒❳ Scan:* https://bot-pair-session.onrender.com
 *❲❒❳ Visit For Tutorial:* www.youtube.com/
 
 🔰 *Created ʙʏ ‖⫷※•şɐɱʉ•※⫸‖ TEAM* 🔰

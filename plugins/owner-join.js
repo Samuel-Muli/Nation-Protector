@@ -1,7 +1,7 @@
 //need fix
 let handler = async (m, { conn, text, usedPrefix, command, args, participants, isOwner }) => {
 	
-  if (!isOwner) return conn.sendMessage(m.chat,{text:`*Invite bot to a group*\n\nHello @${m.sender.split('@')[0]}\nyou can rent the bot to join a group\n\n_For more info you can DM the owner_\n*Type* \`\`\`.owner\`\`\` *to DM the owner*`.trim()}, {quoted:m});
+   return conn.sendMessage(m.chat,{text:`*Invite bot to a group*\n\nHello @${m.sender.split('@')[0]}\nyou can rent the bot to join a group\n\n_For more info you can DM the owner_\n*Type* \`\`\`${process.env.PREFIX}owner\`\`\` *to DM the owner*`.trim()}, {quoted:m});
    /*if (!isOwner) return conn.sendButton(m.chat, `*Invite bot to a group*\n\nHello @${m.sender.split('@')[0]}\nyou can rent the bot to join a group\n\n_more info click on the button_`.trim(), igfg, null, [
     ['Alquilar', `${usedPrefix}buyprem`]] , m, { mentions: [m.sender] })*/
   

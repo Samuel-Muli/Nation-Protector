@@ -1,8 +1,9 @@
-/* import {fbdown, igdl, ttdl, twitter } from "btch-downloader";
+import {fbdown, igdl, ttdl, twitter, youtube } from "btch-downloader";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import ytSearch from "yt-search";
 
 // Simulate __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +19,10 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
     case 'ig':
       await handleInstagram(m, conn, text);
+      break;
+
+    case 'ytmp4':
+      await handleYoutube(m, conn, text);
       break;
 
     case 'tt':
@@ -166,7 +171,7 @@ const handleTwitter = async (m, conn, url) => {
       m.chat,
       {
         video: fs.readFileSync(filePath),
-        caption: `🐦 *Twitter Post*\n📄 *Description*: ${data.title}\n🔗 [Original Post](${url})`,
+        caption: `🐦 *X Post*\n📄 *Description*: ${data.title}\n🔗 [Original Post](${url})`,
       },
       { quoted: m }
     );
@@ -183,4 +188,3 @@ handler.tags = ["downloader"];
 handler.command = /^(ytmp4|fb|ig|tt|x)$/i;
 
 export default handler;
- */

@@ -18,7 +18,7 @@ export async function before(m, { conn }) {
       console.log(`Processing message from chat: ${m.chat}`);
       console.log(`Message content: ${m.text || m.caption}`);
   
-      // Show "Recording" presence in the chat
+      // Show "Recording" presence in the chat//
       await conn.sendPresenceUpdate("recording", m.chat);
       console.log("Presence set to 'Recording'.");
   

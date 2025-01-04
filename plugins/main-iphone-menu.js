@@ -109,23 +109,8 @@ let str = `
 ┃❏*itunes
 ┃❏*lyrics
 ┃❏*imdb
-┃❏*course
 ┃❏*randomcourse
 ┃❏*readmore <text1>|<text2>
-┃❏*readvo
-┃❏*removebg
-┃❏*ss <url>
-┃❏*ssf <url>
-┃❏*style <key> <text>
-┃❏*subreddit
-┃❏*telesticker  Ⓛ
-┃❏*tourl
-┃❏*translate <lang> <text>
-┃❏*tts <lang> <task>
-┃❏*wa
-┃❏*wikipedia
-┃❏*true
-┃❏*findmusic
 ┃❏*githubstalk <query>
 ╰─────────────────➢
 ┌─☛『 *_group_* 』☚
@@ -156,52 +141,6 @@ let str = `
 ┃❏*totag
 ┃❏*warn @user
 ┃❏*warns
-╰─────────────────➢
-┌─☛『 *_anime_* 』☚
-┃❏*anime
-┃❏*akira
-┃❏*akiyama
-┃❏*anna
-┃❏*asuna
-┃❏*ayuzawa
-┃❏*boruto
-┃❏*chiho
-┃❏*chitoge
-┃❏*deidara
-┃❏*erza
-┃❏*elaina
-┃❏*eba
-┃❏*emilia
-┃❏*hestia
-┃❏*hinata
-┃❏*inori
-┃❏*isuzu
-┃❏*itachi
-┃❏*itori
-┃❏*kaga
-┃❏*kagura
-┃❏*kaori
-┃❏*keneki
-┃❏*kotori
-┃❏*kurumi
-┃❏*madara
-┃❏*mikasa
-┃❏*miku
-┃❏*minato
-┃❏*naruto
-┃❏*nezuko
-┃❏*sagiri
-┃❏*sasuke
-┃❏*sakura
-┃❏*akira
-┃❏*amv  Ⓛ
-┃❏*waifu
-┃❏*neko
-┃❏*zerotwo
-┃❏*loli
-┃❏*jjanime  Ⓛ
-┃❏*pokedex <pokemon>
-┃❏*trace
 ╰─────────────────➢
 ┌─☛『 *_img_* 』☚
 ┃❏*messi
@@ -250,8 +189,6 @@ let str = `
 ┌─☛『 *_fun_* 』☚
 ┃❏*afk <reason>
 ┃❏*tomp3
-┃❏*toav
-┃❏*toxicity
 ┃❏*bot
 ┃❏*character @tag
 ┃❏*dare
@@ -262,11 +199,6 @@ let str = `
 ┃❏*ship
 ┃❏*truth
 ┃❏*waste @user
-┃❏*motherfucker
-┃❏*sucker
-┃❏*horny
-┃❏*image
-┃❏*meme
 ╰─────────────────➢
 ┌─☛『 *_reaction_* 』☚
 ┃❏*bully @tag
@@ -339,18 +271,12 @@ let str = `
 ┃❏*listcmd
 ┃❏*setcmd <txt>
 ╰─────────────────➢
-┌─☛『 *_finance_* 』☚
-┃❏*crypto
-╰─────────────────➢
 ┌─☛『 *_downloader_* 』☚
 ┃❏*facebook <url>
 ┃❏*gdrive 🅟
 ┃❏*gitclone <url>
 ┃❏*igstalk
 ┃❏*instagram
-┃❏*mediafire <url>
-┃❏*mega
-┃❏*modapk
 ┃❏*play <query>
 ┃❏*play2 <text>
 ┃❏*playvid <text>
@@ -362,10 +288,6 @@ let str = `
 ┃❏*ytsearch
 ┃❏*ytmp4 <yt-link>
 ┃❏*wallpaper <query>
-╰─────────────────➢
-┌─☛『 *_premium_* 』☚
-┃❏*gdrive 🅟
-┃❏*mediafire <url>
 ╰─────────────────➢
 ┌─☛『 *_economy_* 』☚
 ┃❏*addgold <@user>
@@ -402,46 +324,13 @@ let str = `
 ┃❏*ppt <rock/paper/scissors>
 ┃❏*tictactoe <tag number>
 ╰─────────────────➢
-┌─☛『 *_config_* 』☚
-┃❏*enable <option>
-┃❏*disable <option>
-╰─────────────────➢
 ┌─☛『 *_internet_* 』☚
 ┃❏*google <search>
 ┃❏*s <search>
 ╰─────────────────➢
-┌─☛『 *_advanced_* 』☚
-┃❏$
-╰─────────────────➢
-┌─☛『 *_plugin_* 』☚
-┃❏*plugins
-┃❏*install <Gist URL>
-╰─────────────────➢
-┌─☛『 *_rg_* 』☚
-┃❏*reg <name.age>
-┃❏*mysn
-┃❏*unreg <Num Serie>
-╰─────────────────➢
-┌─↘☛『 *_audio_* 』☚
-┃❏*bass [vn]
-┃❏*blown [vn]
-┃❏*deep [vn]
-┃❏*earrape [vn]
-┃❏*fast [vn]
-┃❏*fat [vn]
-┃❏*nightcore [vn]
-┃❏*reverse [vn]
-┃❏*robot [vn]
-┃❏*slow [vn]
-┃❏*smooth [vn]
-┃❏*tupai [vn]
-╰─────────────────➢
 ┌─☛『 *_news_* 』☚
 ┃❏*ndtv
 ┃❏*technews
-╰─────────────────➢
-┌─➢『 *_conversion_* 』❖
-┃❏*convert
 ╰─────────────────➢
 ‖⫷※•şɐɱʉ•※⫸‖ 𝙱𝚈 SaMu`
 
@@ -450,9 +339,9 @@ let str = `
     m.react(done)
 
 }
-handler.help = ['menui']
+handler.help = ['menuiphone']
 handler.tags = ['main']
-handler.command = ['menu1', 'imenu', 'menui'] 
+handler.command = ['menuiphone', 'imenu', 'menui'] 
 
 export default handler
 function clockString(ms) {

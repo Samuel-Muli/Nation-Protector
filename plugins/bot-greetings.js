@@ -37,7 +37,7 @@ export async function all(m) {
   ) 
   {
 
-    m.reply('*WELCOME*\n *Am ‖⫷※•şɐɱʉ•※⫸‖ personal assistant*\n\n\nHello 💕🥰 \n SaMu may be away, but He will be back soon 😇\n type */menu* to enjoy some awesome commands as you wait');
+    m.reply(`*WELCOME*\n *Am ‖⫷※•şɐɱʉ•※⫸‖ personal assistant*\n\n\nHello 💕🥰 \n SaMu may be away, but He will be back soon 😇\n type *${process.env.PREFIX}menu* to enjoy some awesome commands as you wait`);
     /* this.sendButton(
       m.chat,
       `*WELCOME am ‖⫷※•şɐɱʉ•※⫸‖ personal assistant*      
