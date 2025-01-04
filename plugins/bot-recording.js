@@ -1,4 +1,4 @@
-export async function before(m, { conn }) {
+/* export async function before(m, { conn }) {
     try {
       console.log("Processing incoming message...");
   
@@ -32,4 +32,4 @@ export async function before(m, { conn }) {
     }
   
     return true;
-  }
+  } */
