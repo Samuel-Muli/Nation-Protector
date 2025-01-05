@@ -4,7 +4,7 @@
   "keywords": [
     "whatsapp bot"
   ],
-  "repository": "https://github.com/muli-tech/The-Great",
+  "repository": "https://github.com/Samuel-Muli/Nation-Protector",
   "stack": "container",
   "env": {
     "DATABASE_URL": {
