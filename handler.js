@@ -556,10 +556,10 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'THE XLICON-BOT',
+                    title: 'Nation Protector',
                     body: 'welcome to Group',
                     thumbnailUrl: welcomeApiUrl,
-                    sourceUrl: 'https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
+                    sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
                     mediaType: 1,
                     renderLargerThumbnail: true,
                   },
@@ -613,10 +613,10 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'THE XLICON BOT',
+                    title: 'Nation Protector',
                     body: 'Goodbye from  Group',
                     thumbnailUrl: leaveApiUrl,
-                    sourceUrl: 'https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
+                    sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
                     mediaType: 1,
                     renderLargerThumbnail: true,
                   },
