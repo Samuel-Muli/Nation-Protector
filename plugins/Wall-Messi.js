@@ -1,10 +1,36 @@
-import axios from 'axios'
-let handler = async(m, { conn, usedPrefix, command }) => {
-let res = (await axios.get(`https://raw.githubusercontent.com/Guru322/api/Guru/BOT-JSON/Messi.json`)).data  
-let url = await res[Math.floor(res.length * Math.random())]
-conn.sendFile(m.chat, url, 'error.jpg', `*Messi*`, m)} 
-//conn.sendButton(m.chat, "*Messi*", author, url, [['⚽ NEXT ⚽', `${usedPrefix + command}`]], m)}
-handler.help = ['messi']
-handler.tags = ['img']
-handler.command = /^(messi)$/i
-export default handler
+import axios from 'axios';
+
+const handler = async (m, { conn }) => {
+  try {
+    const response = await axios.get('https://raw.githubusercontent.com/Guru322/api/Guru/BOT-JSON/Messi.json');
+    const messiImages = response.data;
+    const messiImageUrl = messiImages[Math.floor(Math.random() * messiImages.length)];
+
+    const forwardMessage = '*Messi - The Legend!*';
+    const hash = '*Powered SaMuTech*';
+
+    const doc = {
+      image: { url: messiImageUrl },
+      caption: forwardMessage,
+      contextInfo: {
+        externalAdReply: {
+          title: "❀•°Messi°•❀",
+          body: hash,
+          thumbnailUrl: messiImageUrl,
+          showAdAttribution: true
+        }
+      }
+    };
+
+    await conn.sendMessage(m.chat, doc, { quoted: m });
+
+  } catch {
+    throw '*Error!*';
+  }
+};
+
+handler.help = ['messi'];
+handler.tags = ['img'];
+handler.command = /^(messi)$/i;
+
+export default handler;

@@ -1,126 +1,110 @@
-const AUTO_STATUS_LIKE = process.env.AUTO_STATUS_LIKE;
-
-export async function before(m, { isAdmin, isBotAdmin }) {
-    try {
-      // Check if AUTO_STATUS_LIKE is enabled
-    const autoStatusLike = AUTO_STATUS_LIKE === "true";
-      if (!autoStatusLike) {
-        console.log("AUTO_STATUS_LIKE is disabled. Skipping status like.");
-        return false;
-      }
-  
-      // Get the like emoji from the environment variable, default to '💚' if not set
-      const likeEmoji = process.env.AUTO_STATUS_LIKE_EMOJI || "💚";
-  
-      // Check if the m is a status update
-      if (!m || m.key.remoteJid !== 'status@broadcast') {
-        return false;
-      }
-  
-      if (m.key.remoteJid === "status@broadcast") {
-        // Decode bot user ID
-        const botId = await conn.decodeJid(conn.user.id);
-  
-        // Send a reaction (like) to the status
-        await conn.sendm(m.key.remoteJid, {
-          react: {
-            key: m.key,
-            text: likeEmoji,
-          },
-        }, {
-          statusJidList: [m.key.participant, botId],
-        });
-      }
-  
-      // If Status Saver is disabled, do nothing
-      if (process.env.Status_Saver !== 'true') {
-        console.log("Status Saver is disabled.");
-        return false;
-      }
-  
-      // Initialize story array if not already present
-      this.story = this.story || [];
-  
-      // Extract necessary data from the m object
-      const { mtype, sender } = m;
-  
-      console.log("Received m object:", JSON.stringify(m, null, 2));
-      if (!sender) {
-        console.error("Sender is null or undefined");
-        return false;
-      }
-  
-      // Get the sender's name
-      const senderName = conn.getName(sender) || "Unknown";
-      console.log("Bot ID:", conn.user.id);
-  
-      let mContent = '';
-      // A base64-decoded string (for later usage)
-      const statusHeader = Buffer.from("QVVUTyBTVEFUVVMgU0FWRVI=", "base64").toString("utf-8"); //AUTO STATUS SAVER
-
-  
-      // Handle different m types (image, video, audio, text)
-      if (mtype === 'imagem' || mtype === "videom") {
-        mContent = `${statusHeader}\n*mmm*\n\n*🩵Status:* ${senderName}\n*🩵Caption:* ${m.caption || ''}`;
-        await conn.copyNForward(conn.user.id, m, true);
-        await this.reply(conn.user.id, mContent, m, { mentions: [sender] });
-        this.story.push({
-          type: mtype,
-          quoted: m,
-          sender,
-          caption: mContent,
-          buffer: m,
-        });
-      } else if (mtype === 'audiom') {
-        mContent = `${statusHeader}\n\n*🩵Status:* ${senderName}`;
-        await conn.copyNForward(conn.user.id, m, true);
-        await this.reply(conn.user.id, mContent, m, { mimetype: m.mimetype });
-        this.story.push({
-          type: mtype,
-          quoted: m,
-          sender,
-          buffer: m,
-        });
-      } else if (mtype === "extendedTextm") {
-        mContent = `${statusHeader}*\n\n${m.text || ''}`;
-        await this.reply(conn.user.id, mContent, m, { mentions: [sender] });
-        this.story.push({
-          type: mtype,
-          quoted: m,
-          sender,
-          m: mContent,
-        });
-      } else if (m.quoted) {
-        await conn.copyNForward(conn.user.id, m.quoted, true);
-        await conn.sendm(m.chat, mContent, { quoted: m });
-      } else {
-        console.log("Unsupported m type or empty m.");
-        return false;
-      }
-  
-      // If automatic status reply is enabled, send a reply
-      /* if (process.env.STATUS_REPLY && process.env.STATUS_REPLY.toLowerCase() === "true") {
-        const replym = process.env.STATUS_MSG || "Shotgun Suppressor 💖💖 SUCCESSFULLY VIEWED YOUR STATUS";
-        console.log("Sending status reply to sender:", replym);
-        const quotedm = {
-          key: {
-            remoteJid: 'status@broadcast',
-            id: m.key.id,
-            participant: sender,
-          },
-          m: m.m,
-        };
-        await conn.sendm(sender, { text: replym }, { quoted: quotedm });
-      } */
-    } catch (error) {
-      console.error("Failed to process m:", error.m || "Unknown error");
-      if (m.quoted && m.quoted.text) {
-        await m.reply(m.quoted.text);
-      } else {
-        await this.reply(conn.user.id, "Failed to process m: " + (error.m || "Unknown error"), m, { mentions: [sender] });
-      }
+export async function before(message, { isAdmin, isBotAdmin }) {
+  try {
+    // Check if AUTO_STATUS_LIKE is enabled
+    const autoStatusLike = process.env.AUTO_STATUS_LIKE === "true";
+    if (!autoStatusLike) {
+      console.log("AUTO_STATUS_LIKE is disabled. Skipping status like.");
+      return false;
     }
-  
-    return true;
+
+    // Get the like emoji from the environment variable, default to '💚' if not set
+    const likeEmoji = process.env.AUTO_STATUS_LIKE_EMOJI || "💚";
+
+    if (!message || message.key.remoteJid !== 'status@broadcast') {
+      return false;
+    }
+
+    if (message.key.remoteJid === "status@broadcast") {
+      const botJid = await conn.decodeJid(conn.user.id);
+      await conn.sendMessage(message.key.remoteJid, {
+        react: {
+          key: message.key,
+          text: likeEmoji,
+        },
+      }, {
+        statusJidList: [message.key.participant, botJid],
+      });
+    }
+
+    if (process.env.STATUS_SAVER !== 'true') {
+      console.log("Status Saver is disabled.");
+      return false;
+    }
+
+    this.story = this.story || [];
+    const { mtype, sender } = message;
+
+    console.log("Received message object:", JSON.stringify(message, null, 2));
+    if (!sender) {
+      console.error("Sender is null or undefined");
+      return false;
+    }
+
+    const senderName = conn.getName(sender) || "Unknown";
+    console.log("Bot ID:", conn.user.id);
+
+    let replyText = '';
+    const base64String = Buffer.from("QVVUTyBTVEFUVVMgU0FWRVI=", "base64").toString("utf-8");
+
+    if (mtype === 'imageMessage' || mtype === "videoMessage") {
+      replyText = `${base64String}\n*mmm*\n\n*🩵Status:* ${senderName}\n*🩵Caption:* ${message.caption || ''}`;
+      await conn.copyNForward(conn.user.id, message, true);
+      await this.reply(conn.user.id, replyText, message, { mentions: [sender] });
+      this.story.push({
+        type: mtype,
+        quoted: message,
+        sender,
+        caption: replyText,
+        buffer: message,
+      });
+    } else if (mtype === 'audioMessage') {
+      replyText = `${base64String}\n\n*🩵Status:* ${senderName}`;
+      await conn.copyNForward(conn.user.id, message, true);
+      await this.reply(conn.user.id, replyText, message, { mimetype: message.mimetype });
+      this.story.push({
+        type: mtype,
+        quoted: message,
+        sender,
+        buffer: message,
+      });
+    } else if (mtype === "extendedTextMessage") {
+      replyText = `${base64String}*\n\n${message.text || ''}`;
+      await this.reply(conn.user.id, replyText, message, { mentions: [sender] });
+      this.story.push({
+        type: mtype,
+        quoted: message,
+        sender,
+        message: replyText,
+      });
+    } else if (message.quoted) {
+      await conn.copyNForward(conn.user.id, message.quoted, true);
+      await conn.sendMessage(message.chat, replyText, { quoted: message });
+    } else {
+      console.log("Unsupported message type or empty message.");
+      return false;
+    }
+
+    if (process.env.STATUS_REPLY && process.env.STATUS_REPLY.toLowerCase() === "true") {
+      const statusReplyText = process.env.STATUS_MSG || "💖💖 SUCCESSFULLY VIEWED YOUR STATUS";
+      console.log("Sending status reply to sender:", statusReplyText);
+      const quotedMessage = {
+        key: {
+          remoteJid: 'status@broadcast',
+          id: message.key.id,
+          participant: sender,
+        },
+        message: message.message,
+      };
+      await conn.sendMessage(sender, { text: statusReplyText }, { quoted: quotedMessage });
+    }
+  } catch (error) {
+    console.error("Failed to process message:", error.message || "Unknown error");
+    if (message.quoted && message.quoted.text) {
+      await message.reply(message.quoted.text);
+    } else {
+      await this.reply(conn.user.id, "Failed to process message: " + (error.message || "Unknown error"), message, { mentions: [sender] });
+    }
   }
-  
+
+  return true;
+}

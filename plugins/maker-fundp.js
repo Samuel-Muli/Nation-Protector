@@ -1,4 +1,4 @@
-import sharp from 'sharp';
+/* import sharp from 'sharp';
 
 let handler = async (m, { conn }) => {
   let who = m.quoted ? m.quoted.sender : m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
@@ -186,3 +186,4 @@ handler.tags = ['maker'];
 handler.command = ['gay', 'wasted','jail'];
 
 export default handler;
+ */
