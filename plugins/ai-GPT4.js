@@ -31,9 +31,9 @@ let handler = async (m, { conn, text, args, usedPrefix, command }) => {
 };
 
 // Command metadata
-handler.help = ['zoro <text>'];
+handler.help = ['you <text>'];
 handler.tags = ['AI'];
-handler.command = /^(zoro)$/i;
+handler.command = /^(you)$/i;
 
 export default handler;
 
