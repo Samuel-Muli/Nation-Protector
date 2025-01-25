@@ -40,8 +40,8 @@ let handler = async (message, { text, conn }) => {
   }
 };
 
-handler.help = ["cninfo"];
+handler.help = ["countryinfo <country name>"];
 handler.tags = ["tools"];
-handler.command = ["cninfo"];
+handler.command = ["cninfo", 'countryinfo'];
 
 export default handler;

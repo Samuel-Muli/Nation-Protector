@@ -21,12 +21,15 @@ export async function all(m) {
     'hello',
     'Hie',
     'hi',
-    'Heey',
+    'Hey',
     'Sam',
     'Muli',
     'niaje',
     'muli',
     'sam',
+    'yoh',
+    'Yoh',
+    'Muli',
 
   ];
 

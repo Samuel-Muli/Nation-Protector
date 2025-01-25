@@ -526,8 +526,8 @@ export async function participantsUpdate({ id, participants, action }) {
             ppgp = await this.profilePictureUrl(id, 'image')
           } catch (error) {
             console.error(`Error retrieving profile picture: ${error}`)
-            pp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
-            ppgp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
+            pp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
+            ppgp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
           } finally {
             let text = (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user')
               .replace('@group', await this.getName(id))
@@ -556,7 +556,7 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'Nation Protector',
+                    title: 'Shotgun Suppressor',
                     body: 'welcome to Group',
                     thumbnailUrl: welcomeApiUrl,
                     sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
@@ -583,8 +583,8 @@ export async function participantsUpdate({ id, participants, action }) {
             ppgp = await this.profilePictureUrl(id, 'image')
           } catch (error) {
             console.error(`Error retrieving profile picture: ${error}`)
-            pp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
-            ppgp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
+            pp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
+            ppgp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
           } finally {
             let text = (chat.sBye || this.bye || conn.bye || 'HELLO, @user').replace(
               '@user',
@@ -613,7 +613,7 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'Nation Protector',
+                    title: 'Shotgun Suppressor',
                     body: 'Goodbye from  Group',
                     thumbnailUrl: leaveApiUrl,
                     sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
@@ -750,36 +750,42 @@ Delete Chat
  */
 export async function deleteUpdate(message) {
   try {
+    // Check if the anti-delete feature is disabled
     if (
       typeof process.env.antidelete === 'undefined' ||
       process.env.antidelete.toLowerCase() === 'false'
     )
-      return
+      return;
 
-    const { fromMe, id, participant } = message
-    if (fromMe) return
-    let msg = this.serializeM(this.loadMessage(id))
-    if (!msg) return
-    let chat = global.db.data.chats[msg.chat] || {}
+    const { fromMe, id, participant } = message;
+    if (fromMe) return; // Ignore messages sent by the bot itself
 
+    let msg = this.serializeM(this.loadMessage(id)); // Load the deleted message
+    if (!msg) return; // Skip if the message is unavailable
+
+    // Send notification to the bot owner (conn.user.id)
     await this.reply(
       conn.user.id,
       `
-            ≡ deleted a message 
-            ┌─⊷  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀 
-            ▢ *Number :* @${participant.split`@`[0]} 
+            ≡ Deleted Message Notification
+            ┌─⊷  𝘼𝙉𝙏𝙄-𝘿𝙀𝙇𝙀𝙏𝙀 
+            ▢ *Number:* @${participant.split`@`[0]} 
+            ▢ *Message Content:* ${msg.text || "Media/Unknown Content"}
             └─────────────
-            `.trim(),
+      `.trim(),
       msg,
       {
-        mentions: [participant],
+        mentions: [participant], // Mention the user who deleted the message
       }
-    )
-    this.copyNForward(conn.user.id, msg, false).catch(e => console.log(e, msg))
+    );
+
+    // Forward the deleted message to the bot owner
+    await this.copyNForward(conn.user.id, msg, false).catch((e) => console.log(e, msg));
   } catch (e) {
-    console.error(e)
+    console.error("Error in deleteUpdate function:", e);
   }
 }
+
 
 /*
  Polling Update 
@@ -841,7 +847,7 @@ export async function presenceUpdate(presenceUpdate) {
 dfail
  */
 global.dfail = (type, m, conn) => {
-  const userTag = `👋 Hai *@${m.sender.split('@')[0]}*, `
+  const userTag = `😅 huh *@${m.sender.split('@')[0]}*, `
   const emoji = {
     general: '⚙️',
     owner: '👑',

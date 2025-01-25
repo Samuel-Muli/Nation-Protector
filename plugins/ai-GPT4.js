@@ -1,51 +1,68 @@
-
-import displayLoadingScreen from '../lib/loading.js'
-import fetch from 'node-fetch'
-import {delay} from '@whiskeysockets/baileys'
+import displayLoadingScreen from '../lib/loading.js';
+import fetch from 'node-fetch';
+import { delay } from '@whiskeysockets/baileys';
 
 let handler = async (m, { conn, text, args, usedPrefix, command }) => {
   try {
-    if (!text) throw `uhm.. what do you want to say?`
-    m.react('🤖')
-    //await displayLoadingScreen(conn, m.chat)
+    if (!text) throw `Please specify a query. For example: *${usedPrefix}${command} Zoro*`;
 
+    m.react('🤖'); // React to indicate processing
+    await displayLoadingScreen(conn, m.chat); // Display a loading screen while fetching data
 
     const prompt = encodeURIComponent(text);
-    let apiurl = `https://api.giftedtech.my.id/api/ai/geminiaipro?apikey=gifted&q=${prompt}`
+    const apiUrl = `https://bk9.fun/ai/you?q=${prompt}`;
 
-    const result = await fetch(apiurl);
-    const response = await result.json();
-    m.reply(response)
-    console.log(response)
-    const textt = response.result.reply;
-    await typewriterEffect(conn,m, m.chat , textt);
-       
+    // Fetch the response from the API
+    const response = await fetch(apiUrl);
+    if (!response.ok) throw new Error(`Failed to fetch from API: ${response.statusText}`);
+
+    const data = await response.json();
+    if (!data?.status) throw new Error('Invalid response from API.');
+
+    const overview = data.BK9; // Extract the main content from the response
+
+    // Reply with the content
+    await typewriterEffect(conn, m, m.chat, overview);
+
   } catch (error) {
     console.error(error);
-    m.reply('Oops! Something went wrong. , we are trying had to fix it asap');
+    m.reply('Oops! Something went wrong. We are working hard to fix it ASAP.');
   }
-}
-handler.help = ['gpt4 <text>']
-handler.tags = ['AI']
-handler.command = /^(gpt4)$/i
+};
 
-export default handler
+// Command metadata
+handler.help = ['zoro <text>'];
+handler.tags = ['AI'];
+handler.command = /^(zoro)$/i;
 
-async function typewriterEffect(conn, quoted ,from, text) {
-    let { key } = await conn.sendMessage(from, { text: 'Thinking...' } , {quoted:quoted})
-  
-    for (let i = 0; i < text.length; i++) {
-      const noobText = text.slice(0, i + 1);
-      await conn.relayMessage(from, {
+export default handler;
+
+/**
+ * Simulates a typewriter effect when sending a message.
+ * @param {object} conn - The WhatsApp connection object.
+ * @param {object} quoted - The quoted message object.
+ * @param {string} from - The chat ID to send the message to.
+ * @param {string} text - The text to display in a typewriter effect.
+ */
+async function typewriterEffect(conn, quoted, from, text) {
+  const { key } = await conn.sendMessage(from, { text: 'Thinking...' }, { quoted });
+
+  for (let i = 0; i < text.length; i++) {
+    const partialText = text.slice(0, i + 1); // Slice the text up to the current index
+    await conn.relayMessage(
+      from,
+      {
         protocolMessage: {
           key: key,
           type: 14,
           editedMessage: {
-            conversation: noobText
-          }
-        }
-      }, {});
-   
-       await delay(100); // Adjust the delay time (in milliseconds) as needed
-    }
+            conversation: partialText,
+          },
+        },
+      },
+      {}
+    );
+
+    await delay(25); // Adjust the delay as needed (in milliseconds)
   }
+}
