@@ -30,6 +30,7 @@ WORKDIR /Nation-Protector
 
 # Ensure the /Nation-Protector/tmp directory exists
 RUN mkdir -p /Nation-Protector/tmp
+RUN mkdir -p /Nation-Protector/session
 
 # Set permissions to give full access to the entire /Nation-Protector directory
 RUN chmod -R 777 /Nation-Protector
