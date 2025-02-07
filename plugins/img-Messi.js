@@ -6,7 +6,7 @@ const handler = async (m, { conn }) => {
     const messiImages = response.data;
     const messiImageUrl = messiImages[Math.floor(Math.random() * messiImages.length)];
 
-    const forwardMessage = '*Messi - The Legend!*';
+    const forwardMessage = '*Messi!*';
     const hash = '*Powered SaMuTech*';
 
     const doc = {

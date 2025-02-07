@@ -1,4 +1,4 @@
-export async function before(message, { isAdmin, isBotAdmin }) {
+/* export async function before(message, { isAdmin, isBotAdmin }) {
   try {
     // Check if AUTO_STATUS_LIKE is enabled
     const autoStatusLike = process.env.AUTO_STATUS_LIKE === "true";
@@ -107,4 +107,29 @@ export async function before(message, { isAdmin, isBotAdmin }) {
   }
 
   return true;
+}
+ */
+
+let bot = global.db.data.settings[this.user.jid] || {};
+async function handleStatusReaction(m, conn) {
+  if (m.key.remoteJid === "status@broadcast" && !m.fromMe) {
+    await conn.readMessages([m.key]);
+    const samu = [
+      "🌟", "🚀", "🔥", "💎", "✨", "🎉", "😎", "🤩", "🥳", 
+      "💡", "🌈", "🌸", "⚡", "🎶", "🏆", "❤️‍🔥", "🎯", "📸",
+      "🪄", "🌍", "🎵", "🧠", "🌌", "🎮", "🪐"
+    ];
+    const randomEmoji = samu[Math.floor(Math.random() * samu.length)];
+    const me = await conn.decodeJid(conn.user.id);
+    await conn.sendMessage(
+      m.key.remoteJid,
+      { react: { key: m.key, text: randomEmoji } },
+      { statusJidList: [m.key.participant, me] }
+    );
+  }
+}
+if (process.env.STATUSVIEW && process.env.STATUSVIEW.toLowerCase() === "true") {
+  await handleStatusReaction(m, conn);
+} else if (bot.statusview) {
+  await handleStatusReaction(m, conn);
 }

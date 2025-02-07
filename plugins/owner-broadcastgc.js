@@ -21,9 +21,9 @@ contextInfo: m,
     }
   m.reply(`*MESSAGE SENT TO ${anu.length} GROUP/S*\n\n*NOTE: THIS COMMAND MAY FAIL AND NOT BE SENT TO ALL CHATS, SORRY FOR THE TIME BEING*`)
 }
-handler.help = ['broadcastgroup', 'bcgc'].map(v => v + ' <text>')
+handler.help = ['broadcastgroup'].map(v => v + ' <text>')
 handler.tags = ['owner']
-handler.command = /^(broadcast|bc)(group|grup|gc)$/i
+handler.command = /^(broadcast|bc)(group|group|gc)$/i
 handler.owner = true
 
 export default handler

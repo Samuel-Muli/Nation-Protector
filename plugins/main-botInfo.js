@@ -52,7 +52,7 @@ let infobt = `
   *≡*. 
 │ ➫「 *Developer* 」
 │ ➫ *Name    :* Samuel Muli
-│ ➫ *Place   :* Machakos
+│ ➫ *Place   :* Naurobi
 │ ➫ *Gender  :*  ᴍᴀʟᴇ
 │ ➫ *Age     :* _24_
 │ ➫ *Phone   :* wa.me/254705244235

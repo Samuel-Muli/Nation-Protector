@@ -48,7 +48,10 @@ async function typewriterEffect(conn, quoted, from, text) {
   const { key } = await conn.sendMessage(from, { text: 'Thinking...' }, { quoted });
 
   for (let i = 0; i < text.length; i++) {
-    const partialText = text.slice(0, i + 1); // Slice the text up to the current index
+    // const partialText = text.slice(0, i + 1); // Slice the text up to the current index
+    const randomIncrement = Math.floor(Math.random() * 28) + 1; // Generate a random increment up to 10
+    const partialText = text.slice(0, i + randomIncrement); // Slice the text up to the current index with random increment
+    i += randomIncrement - 1; // Adjust the loop index to account for the random increment
     await conn.relayMessage(
       from,
       {
@@ -63,6 +66,6 @@ async function typewriterEffect(conn, quoted, from, text) {
       {}
     );
 
-    await delay(25); // Adjust the delay as needed (in milliseconds)
+    await delay(1); // Adjust the delay as needed (in milliseconds)
   }
 }

@@ -52,7 +52,7 @@ let handler = async (m) => {
 };
 
 handler.help = ['imggen <prompt for image>'];
-handler.tags = ['AI'];
-handler.command = /^(text2img|imggen)$/i;
+handler.tags = ['img'];
+handler.command = /^(text2img|imggen|img1)$/i;
 
 export default handler;

@@ -20,7 +20,7 @@ let handler = async (m, { usedPrefix, command }) => {
 };
 
 // Command metadata
-handler.command = ['chucknorris', 'norrisjoke', 'norris', 'cnj'];
+handler.command = ['chucknorris', 'chuck', 'norris', 'cnj'];
 handler.tags = ['fun'];
 handler.help = ['norrisjoke'].map(cmd => `${cmd}`);
 handler.limit = false;

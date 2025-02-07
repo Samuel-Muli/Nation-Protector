@@ -225,13 +225,11 @@ _________________________
 _________________________
 🔰 *hidden*:_only my fav can use_📡
 _________________________
-🔰  *autosticker* :_Automatically sends stickers if you send picture in gc_
+🔰 t *autosticker* :_Automatically sends stickers if you send picture in gc_
 _________________________
 🔰 *detect*: _Detection of all enablings_
 _________________________
 🔰 *antidelete* : _resends deleted msg_
-_________________________
-🔰 *jarvis* : _Test your self and find out 🤣_
 _________________________
 🔰 *antispam* : _removes members who spam too much in gc_
 _________________________
@@ -268,7 +266,7 @@ m.reply(`
 
 }
 handler.help = ['en', 'dis'].map(v => v + 'able <option>')
-handler.tags = ['config']
+handler.tags = ['tools']
 handler.command = /^((en|dis)able|(turn)?o(n|ff)|[01])$/i
 
 export default handler

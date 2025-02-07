@@ -4,6 +4,6 @@ guru.data.json
 database.json
 /session/*
 !/session/.gitkeep
-!/session/file
+!/session/a
 session.json
 .env

@@ -33,7 +33,7 @@ let handler = async (m, { text, conn, usedPrefix, command }) => {
           externalAdReply: {
             title: "Your AI Response",
             body: "Powered by ‖⫷※•şɐɱʉ•※⫸‖",
-            thumbnailUrl: "https://telegra.ph/file/8844f68f975294619490f.jpg",
+            thumbnailUrl: "https://telegra.ph/file/087410e10ba5b08083295.jpg",
             sourceUrl: "https://github.com/muli-tech/The-Great",
           }
         }
@@ -56,8 +56,8 @@ let handler = async (m, { text, conn, usedPrefix, command }) => {
           externalAdReply: {
             title: "Fallback AI Response",
             body: "Powered by ‖⫷※•şɐɱʉ•※⫸‖",
-            thumbnailUrl: "https://telegra.ph/file/8844f68f975294619490f.jpg",
-            sourceUrl: "https://github.com/muli-tech/The-Great",
+            thumbnailUrl: "https://telegra.ph/file/087410e10ba5b08083295.jpg",
+            sourceUrl: "https://github.com/Samuel-Muli/Nation-Protector",
           }
         }
       }, { quoted: m });
