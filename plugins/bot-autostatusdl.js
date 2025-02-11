@@ -1,4 +1,4 @@
-// Export an asynchronous function named 'before' that runs before processing a message
+/* // Export an asynchronous function named 'before' that runs before processing a message
 // - message: The incoming message object
 // - conn: The connection object for interacting with the WhatsApp API
 // - isAdmin: Boolean indicating if the sender is an admin
@@ -60,4 +60,4 @@ export async function before(message, { conn, isAdmin, isBotAdmin }) {
     // If the chat has specific properties in the database, return true
     // This indicates that the message was processed successfully
     if (chatData) return true;
-}
+} */
