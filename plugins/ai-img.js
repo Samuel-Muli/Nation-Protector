@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch from 'node-fetch';//working
 import { delay } from '@whiskeysockets/baileys';
 import fs from 'fs';
 import path from 'path';
@@ -58,7 +58,7 @@ let handler = async (m, { conn, text, args, usedPrefix, command }) => {
 };
 
 // Command metadata
-handler.help = ['imggen <description>'];
+handler.help = ['img <description>'];
 handler.tags = ['AI'];
 handler.command = /^(img)$/i;
 

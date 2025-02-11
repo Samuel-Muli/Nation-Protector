@@ -40,7 +40,7 @@ let handler = async (m, { conn, text, usedPrefix }) => {
       musicUrl = fallbackResult.result.download_url;
     }
 
-    const abrahamResponse = await fetch('https://api.github.com/users/abrahamdw882');
+    const abrahamResponse = await fetch('https://api.github.com/users/Samuel-Muli');
     const abrahamData = await abrahamResponse.json();
     const abrahamImageUrl = abrahamData.avatar_url || '';
 
@@ -61,9 +61,9 @@ let handler = async (m, { conn, text, usedPrefix }) => {
           title: "↺ |◁   II   ▷|   ♡",
           body: forwardMessage,
           thumbnailUrl: abrahamImageUrl,
-          sourceUrl: 'https://www.whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
+          sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
           mediaType: 2,
-          mediaUrl: 'https://Instagram.com/abraham.dwamena.182',
+          mediaUrl: 'https://samuel-muli.onrender.com',
           showAdAttribution: true,
           renderLargerThumbnail: true,
         },
@@ -83,8 +83,8 @@ let handler = async (m, { conn, text, usedPrefix }) => {
   }
 };
 
-handler.help = ['search and dl'];
+handler.help = ['play <query>'];
 handler.tags = ['downloader'];
-handler.command = ['ytm', 'playmusic'];
+handler.command = ['ytm', 'playmusic', 'play', 'music'];
 
 export default handler;

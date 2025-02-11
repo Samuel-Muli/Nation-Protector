@@ -33,7 +33,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 };
 
 handler.help = ['deepseek <text>'];
-handler.tags = ['ai'];
+handler.tags = ['AI'];
 handler.command = /^(deepseek)$/i;
 
 export default handler;

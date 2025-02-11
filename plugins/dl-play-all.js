@@ -185,6 +185,6 @@ const handleTwitter = async (m, conn, url) => {
 // Command Configurations
 handler.help = ["fb", "ig", "tt", "x"];
 handler.tags = ["downloader"];
-handler.command = /^(ytmp4|fb|ig|tt|x)$/i;
+handler.command = /^(fb|ig|tt|x)$/i;
 
 export default handler;
