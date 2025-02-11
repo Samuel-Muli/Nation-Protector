@@ -7,3 +7,4 @@ database.json
 !/session/a
 session.json
 .env
+!/tmp/a
