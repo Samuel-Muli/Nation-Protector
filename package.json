@@ -48,6 +48,7 @@
         "axios": "^1.4.0",
         "brainly-scraper-v2": "^2.0.9",
         "btch-downloader": "2.8.2",
+        "canvacord": "^5.0.0", 
         "cfonts": "^3.1.1",
         "chalk": "^5.1.0",
         "cheerio": "^1.0.0-rc.12",

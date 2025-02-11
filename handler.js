@@ -753,7 +753,7 @@ export async function deleteUpdate(message) {
     // Check if the anti-delete feature is disabled
     if (
       typeof process.env.antidelete === 'undefined' ||
-      process.env.antidelete.toLowerCase() === 'false'
+      process.env.antidelete.toLowerCase() === 'true'
     )
       return;
 

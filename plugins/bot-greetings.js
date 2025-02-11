@@ -1,11 +1,13 @@
+import util from 'util';
+
 const userLastMessageMap = new Map();
 
-export async function all(m) {
-  const busy = 5 * 60 * 1000;  //if am out for more than five minutes this will cool you down
-
+export async function all(m, { conn }) {
+  const busy = 5 * 60 * 1000; // 5 minutes cooldown
   const currentTime = Date.now();
   const userId = m.sender;
 
+  // Cooldown check
   if (userLastMessageMap.has(userId)) {
     const lastMessageTime = userLastMessageMap.get(userId);
     if (currentTime - lastMessageTime < busy) {
@@ -13,49 +15,40 @@ export async function all(m) {
     }
   }
 
-  const greetings = [
-    'Hello',
-    'Hi',
-    'Mambo',
-    'bro',
-    'hello',
-    'Hie',
-    'hi',
-    'Hey',
-    'Sam',
-    'Muli',
-    'niaje',
-    'muli',
-    'sam',
-    'yoh',
-    'Yoh',
-    'Muli',
+  // Greetings list (case-insensitive)
+  const greetings = new Set([
+    'hello', 'hi', 'mambo', 'bro', 'hie', 'hey', 'sam', 
+    'muli', 'niaje', 'yoh'
+  ]);
 
-  ];
+  // Normalize message text
+  const msgText = m.text?.trim().toLowerCase();
 
-  if (
-    greetings.includes(m.text) &&
-    !m.isBaileys &&
-    !m.isGroup
-  ) 
-  {
+  if (greetings.has(msgText) && !m.isBaileys && !m.isGroup) {
+    const welcomeMessage = `*WELCOME*\n*Am ‖⫷※•şɐɱʉ•※⫸‖ personal assistant*\n\nHello 💕🥰\nSaMu may be away, but he will be back soon 😇\nType *${process.env.PREFIX}menu* to enjoy some awesome commands as you wait.`;
 
-    m.reply(`*WELCOME*\n *Am ‖⫷※•şɐɱʉ•※⫸‖ personal assistant*\n\n\nHello 💕🥰 \n SaMu may be away, but He will be back soon 😇\n type *${process.env.PREFIX}menu* to enjoy some awesome commands as you wait`);
-    /* this.sendButton(
-      m.chat,
-      `*WELCOME am ‖⫷※•şɐɱʉ•※⫸‖ personal assistant*      
-    Hello 💕🥰 @${m.sender.split('@')[0]} 
-    I may be offline or I may be slow to respond, but wait I will be back soon 😇 click on any button below for instructions`.trim(),
-      igfg,
-      null,
-      [['OWNER HELP', '.grp'], ['the script', '.repo']],
-      m,
-      { mentions: [m.sender] } 
-    );*/
+    // Send a button message
+    const buttons = [
+      { buttonId: '/menu', buttonText: { displayText: '📜 Menu' }, type: 1 },
+      { buttonId: '/help', buttonText: { displayText: '🆘 Help' }, type: 1 },
+      { buttonId: '/alive', buttonText: { displayText: '💡 Alive' }, type: 1 }
+    ];
+
+    const buttonMessage = {
+      text: welcomeMessage,
+      footer: 'Choose an option below:',
+      buttons: buttons,
+      headerType: 1
+    };
+
+    await conn.sendMessage(m.chat, buttonMessage, { quoted: m });
+
+    // React with 💕 emoji
     m.react('💕');
-    
+
+    // Update last message timestamp
     userLastMessageMap.set(userId, currentTime);
   }
 
-  return !0;
+  return true;
 }
