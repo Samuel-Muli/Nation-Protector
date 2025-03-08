@@ -1,94 +1,79 @@
-// silva
-import { downloadContentFromMessage } from '@whiskeysockets/baileys';
+import pkg from '@whiskeysockets/baileys';
+const { downloadMediaMessage } = pkg;
 
-// Helper function to convert stream to Buffer
-async function streamToBuffer(stream) {
-  const chunks = [];
-  for await (const chunk of stream) {
-    chunks.push(chunk);
+const OWNER_NUMBER = '254743706010'; // Replace with actual owner number
+
+let handler = async (m, { conn }) => {
+  console.log(`📩 Received: ${m.text}`); // Debugging
+
+  if (!m.text || !m.quoted) return; // Ignore empty or non-quoted messages
+
+  const botNumber = conn.user?.id.split(':')[0] + '@s.whatsapp.net';
+  const ownerNumber = OWNER_NUMBER + '@s.whatsapp.net';
+
+  // Extract command
+  const cmd = m.text.trim().toLowerCase();
+  if (!['vv', 'vv2', 'vv3'].includes(cmd)) return;
+
+  console.log(`✅ Command detected: ${cmd}`); // Debugging
+
+  // Ensure quoted message exists
+  if (!m.quoted.message) return m.reply('No quoted message detected!');
+
+  // Extract View Once message properly
+  let msg = m.quoted.message;
+  if (msg?.viewOnceMessageV2) msg = msg.viewOnceMessageV2.message;
+  else if (msg?.viewOnceMessage) msg = msg.viewOnceMessage.message;
+  else return m.reply('This is not a View Once message!');
+
+  // Restrict access for vv2 & vv3
+  const isOwner = m.sender === ownerNumber;
+  const isBot = m.sender === botNumber;
+  if (['vv2', 'vv3'].includes(cmd) && !isOwner && !isBot) {
+    return m.reply('Only the owner or bot can use this command!');
   }
-  return Buffer.concat(chunks);
-}
 
-/**
- * Handles ViewOnce media messages and forwards the content to the bot owner.
- * @param {Object} m - The incoming message object from Baileys.
- * @param {Object} conn - The WhatsApp connection instance.
- */
-const handler = async (m, { conn }) => {
   try {
-    // Validate ViewOnce message structure
-    if (!m.message?.viewOnceMessage) return;
+    const messageType = Object.keys(msg)[0];
+    if (!messageType) return m.reply('Unsupported or missing media type!');
 
-    // Extract nested ViewOnce content
-    const viewOnceContent = m.message.viewOnceMessage;
-    const messageType = Object.keys(viewOnceContent)[0];
-    const mediaContent = viewOnceContent[messageType];
-    const caption = mediaContent?.caption || '';
-    const sender = m.sender;
+    let buffer = await downloadMediaMessage(m.quoted, 'buffer', {}, { type: messageType === 'audioMessage' ? 'audio' : undefined });
+    if (!buffer) return m.reply('Failed to retrieve media!');
 
-    // Validate media type before processing
-    const supportedMedia = ['imageMessage', 'videoMessage', 'audioMessage'];
-    if (!supportedMedia.includes(messageType)) {
-      return conn.sendMessage(
-        m.chat, 
-        { text: '❌ Unsupported media type' },
-        { quoted: m }
-      );
-    }
+    let mimetype = msg.audioMessage?.mimetype || 'audio/ogg';
+    let caption = '*© Powered By Silva MD Bot*';
 
-    // Download and convert media
-    const mediaStream = await downloadContentFromMessage(
-      mediaContent,
-      messageType.replace('Message', '').toLowerCase()
-    );
-    const buffer = await streamToBuffer(mediaStream);
+    // Determine recipient based on command
+    let recipient =
+      cmd === 'vv2' ? botNumber :
+      cmd === 'vv3' ? ownerNumber :
+      m.chat; // .vv sends to the same chat
 
-    // Send processing notification
-    await conn.sendMessage(
-      m.chat,
-      {
-        text: '🔄 Processing your ViewOnce media...',
-        contextInfo: { mentionedJid: [sender] }
-      },
-      { quoted: m }
-    );
+    console.log(`📤 Sending media to: ${recipient}`); // Debugging
 
-    // Configuration (Update with your owner JID)
-    const ownerJid = '254705244235@s.whatsapp.net';
-    
-    // Media type mapping
-    const mediaTypeMap = {
-      imageMessage: { type: 'Image 📸', extension: '.jpg' },
-      videoMessage: { type: 'Video 📹', extension: '.mp4' },
-      audioMessage: { type: 'Audio 🎵', extension: '.mp3' }
+    // Send media accordingly
+    const mediaOptions = {
+      imageMessage: { image: buffer, caption },
+      videoMessage: { video: buffer, caption, mimetype: 'video/mp4' },
+      audioMessage: { audio: buffer, mimetype, ptt: true }
     };
 
-    const { type: mediaType, extension } = mediaTypeMap[messageType];
-    const cleanCaption = caption.replace(/[\r\n]+/g, ' ').trim();
+    if (mediaOptions[messageType]) {
+      await conn.sendMessage(recipient, mediaOptions[messageType]);
+    } else {
+      return m.reply('Unsupported media type!');
+    }
 
-    // Forward to owner with metadata
-    await conn.sendMessage(
-      ownerJid,
-      {
-        [messageType.replace('Message', '')]: buffer,
-        fileName: `view_once_${Date.now()}${extension}`,
-        caption: `*💀Anti ViewOnce 💀*\n\n` +
-          `• Type: ${mediaType}\n` +
-          `• Sender: @${sender.split('@')[0]}\n` +
-          (cleanCaption ? `• Caption: ${cleanCaption}` : ''),
-        contextInfo: { mentionedJid: [sender] }
-      }
-    );
-
+    console.log('✅ Media sent successfully'); // Debugging
   } catch (error) {
-    console.error('ViewOnce Handler Error:', error);
-    await conn.sendMessage(
-      m.chat,
-      { text: '❌ Failed to process ViewOnce media' },
-      { quoted: m }
-    );
+    console.error('❌ Error processing View Once message:', error);
+    await m.reply('Failed to process View Once message!');
   }
 };
+
+handler.help = ['vv', 'vv2', 'vv3'];
+handler.tags = ['owner'];
+handler.command = ['vv', 'vv2', 'vv3'];
+handler.owner = true;
 
 export default handler;

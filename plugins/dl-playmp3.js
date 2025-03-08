@@ -1,74 +1,104 @@
-import ytSearch from "yt-search";
-import axios from "axios";
+// musicdl.js
 
-let handler = async (m, { conn, text, usedPrefix, command }) => {
-  if (!text) {
-    return m.reply(`Enter the title or YouTube link!\nExample: *${usedPrefix + command} Faded Alan Walker*`);
-  }
+import fetch from 'node-fetch'
+import ytdl from 'ytdl-core'
+import yts from 'yt-search'
+import fs from 'fs'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
+import os from 'os'
 
-  //await m.reply("🔄 Searching for the video...");
-  try {
-    const search = await ytSearch(text); // Search for the video
-    if (!search || !search.videos || search.videos.length === 0) {
-      return m.reply("❌ No results found! Please try again with a different query.");
+const streamPipeline = promisify(pipeline)
+
+let handler = async (m, { conn, command, text, usedPrefix }) => {
+    if (!text) throw `*Enter a song name!*\n\n*Example:*\n${usedPrefix + command} Heat waves`
+    try {
+        let search = await yts(text)
+        let vid = search.videos[0]
+        if (!vid) throw 'Song/Video not found!'
+        let { title, thumbnail, timestamp, views, ago, url } = vid
+        
+        // Send "Downloading..." message
+        let m1 = await m.reply('*Downloading your song...* 🎵')
+        
+        // Get audio stream
+        let stream = ytdl(url, {
+            filter: 'audioonly',
+            quality: 'highestaudio',
+        })
+
+        // Create temporary file path
+        let tmpDir = os.tmpdir()
+        let filePath = `${tmpDir}/${title}.mp3`
+
+        // Download and save audio
+        await streamPipeline(stream, fs.createWriteStream(filePath))
+
+        // Prepare message template
+        let doc = {
+            audio: {
+                url: filePath
+            },
+            mimetype: 'audio/mpeg',
+            fileName: `${title}.mp3`,
+            contextInfo: {
+                externalAdReply: {
+                    showAdAttribution: true,
+                    mediaType: 2,
+                    mediaUrl: url,
+                    title: title,
+                    body: 'MUSIC BOT',
+                    sourceUrl: url,
+                    thumbnail: await (await fetch(thumbnail)).buffer()
+                }
+            }
+        }
+
+        // Send audio file with metadata
+        await conn.sendMessage(m.chat, doc, { quoted: m })
+
+        // Delete temporary file
+        fs.unlink(filePath, (err) => {
+            if (err) console.error('Error deleting temp file:', err)
+        })
+
+        // Delete "Downloading..." message
+        await m1.delete()
+
+    } catch (error) {
+        console.error('Error in music download:', error)
+        m.reply(`An error occurred: ${error.message}\nPlease try again later`)
     }
+}
 
-    const video = search.videos[0];
-    if (!video) {
-      return m.reply("❌ No video found! Please try again.");
+handler.help = ['play3'].map(v => v + ' <query>')
+handler.tags = ['downloader']
+handler.command = /^(play3|song3)$/i
+
+handler.exp = 0
+handler.limit = false
+handler.register = false
+
+export default handler
+
+// Additional utility functions
+async function fetchBuffer(url) {
+    try {
+        const response = await fetch(url)
+        const buffer = await response.buffer()
+        return buffer
+    } catch (error) {
+        console.error('Error fetching buffer:', error)
+        throw error
     }
+}
 
-    if (video.seconds >= 3600) {
-      return m.reply("❌ Video duration exceeds 1 hour. Please choose a shorter video!");
+async function shortUrl(url) {
+    try {
+        const response = await fetch(`https://tinyurl.com/api-create.php?url=${url}`)
+        return await response.text()
+    } catch (error) {
+        console.error('Error shortening URL:', error)
+        return url
     }
-
-    await m.reply(`🎶 Fetching MP3 for: *${video.title}*...`);
-
-    // Function to fetch MP3     
-    
-    const fetchMP3FromSecondEndpoint = async (url) => {
-      const response = await axios.get(`https://bk9.fun/download/youtube2?url=${url}`);
-      if (!response.data || !response.data.BK9 || response.data.BK9.length === 0) {
-        throw new Error("Second endpoint failed");
-      }
-      return response.data.BK9[0].mediaLink;
-    };
-
-    // fetch mp3
-    let mp3Link = await fetchMP3FromSecondEndpoint(video.url);
-   
-
-    if (!mp3Link) {
-      return m.reply("⚠️ Failed to retrieve MP3 link.");
-    }
-
-    // Send the MP3 file
-    await conn.sendMessage(
-      m.chat,
-      {
-        audio: { url: mp3Link },
-        mimetype: "audio/mpeg",
-        contextInfo: {
-          externalAdReply: {
-            title: video.title,
-            body: "",
-            thumbnailUrl: video.image,
-            sourceUrl: video.url,
-            mediaType: 1,
-            showAdAttribution: true,
-            renderLargerThumbnail: true,
-          },
-        },
-      },
-      { quoted: m }
-    );
-  } catch (error) {
-    m.reply(`❌ Error: ${error.message}`);
-  }
-};
-
-handler.help = ["play3"];
-handler.tags = ["downloader"];
-handler.command = /^play3$/i;
-
-export default handler;
+}

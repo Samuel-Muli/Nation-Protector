@@ -1,4 +1,4 @@
-const userLastMessageMap = new Map();
+/* const userLastMessageMap = new Map();
 
 export async function all(m) {
   const busy = 5 * 60 * 1000;  // If I'm out for more than five minutes, this will cool you down
@@ -45,4 +45,4 @@ export async function all(m) {
   }
 
   return !0;
-}
+} */

@@ -1,4 +1,4 @@
-/* import util from 'util';
+import util from 'util';
 
 const userLastMessageMap = new Map();
 
@@ -51,4 +51,4 @@ export async function all(m, { conn }) {
   }
 
   return true;
-} */
+}
