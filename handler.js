@@ -491,7 +491,9 @@ export async function handler(chatUpdate) {
     } catch (e) {
       console.log(m, m.quoted, e)
     }
-    if (process.env.autoRead) await conn.readMessages([m.key])
+    if (process.env.AUTO_READ === 'true') {
+      await conn.readMessages([m.key])
+    }
     if (process.env.statusview && m.key.remoteJid === 'status@broadcast')
       await conn.readMessages([m.key])
   }
@@ -783,6 +785,40 @@ export async function deleteUpdate(message) {
     await this.copyNForward(conn.user.id, msg, false).catch((e) => console.log(e, msg));
   } catch (e) {
     console.error("Error in deleteUpdate function:", e);
+  }
+}
+//view once messages
+
+export async function viewOnceUpdate(conn, message) {
+  try {
+    const { key, message: msgContent } = message;
+    if (!key) return;
+
+    const { remoteJid, fromMe, participant } = key;
+    if (fromMe) return; // Ignore messages sent by the bot itself
+
+    // Check if the message is a View Once message
+    let viewOnceMessage = msgContent?.viewOnceMessage?.message;
+    if (!viewOnceMessage) return; // Skip if it's not a View Once message
+
+    // Notify the bot owner
+    const botOwner = conn.user.id;
+    await conn.sendMessage(
+      botOwner,
+      {
+        text: `≡ *View Once Message Notification*\n` +
+              `┌─⊷  *VIEW ONCE MESSAGE*  \n` +
+              `▢ *Number:* @${participant.split`@`[0]} \n` +
+              `▢ *Message Content:* ${viewOnceMessage?.conversation || "Media/Unknown Content"}\n` +
+              `└─────────────`,
+        mentions: [participant],
+      }
+    );
+
+    // Forward the View Once message to the bot owner
+    await conn.forwardMessage(botOwner, message, {});
+  } catch (e) {
+    console.error("Error in viewOnceUpdate function:", e);
   }
 }
 
