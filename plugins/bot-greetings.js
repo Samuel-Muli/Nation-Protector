@@ -1,4 +1,4 @@
-import util from 'util';
+/* import util from 'util';
 
 const userLastMessageMap = new Map();
 
@@ -18,7 +18,7 @@ export async function all(m, { conn }) {
   // Greetings list (case-insensitive)
   const greetings = new Set([
     'hello', 'hi', 'mambo', 'bro', 'hie', 'hey', 'sam', 
-    'muli', 'niaje', 'yoh'
+   'niaje', 'yoh'
   ]);
 
   // Normalize message text
@@ -51,4 +51,4 @@ export async function all(m, { conn }) {
   }
 
   return true;
-}
+} */

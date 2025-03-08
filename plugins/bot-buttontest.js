@@ -13,24 +13,11 @@ export async function all(m) {
     }
   }
 
-  const greetings = [
-    'Hello',
-    'Hi',
-    'Mambo',
-    'bro',
-    'hello',
-    'Hie',
-    'hi',
-    'Hey',
-    'Sam',
-    'Muli',
-    'niaje',
-    'muli',
-    'sam',
-    'yoh',
-    'Yoh',
-    'Muli',
-  ];
+  // Greetings list (case-insensitive)
+  const greetings = new Set([
+    'hello', 'hi', 'mambo', 'bro', 'hie', 'hey', 'sam', 
+   'niaje', 'yoh'
+  ]);
 
   if (greetings.includes(m.text) && !m.isBaileys && !m.isGroup) {
     m.reply(

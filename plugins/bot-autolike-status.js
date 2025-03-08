@@ -1,10 +1,10 @@
 export async function before(_0x1f85b2, { isAdmin: _0x19858b, isBotAdmin: _0x3948e4 }) {
     try {
       // Check if AUTO_STATUS_LIKE is enabled
-      const autoStatusLike = process.env.AUTO_STATUS_LIKE === "true";
+      const autoStatusLike = process.env.AUTO_STATUS_LIKE !== "false";
       if (!autoStatusLike) {
-        console.log("AUTO_STATUS_LIKE is disabled. Skipping status like.");
-        return false;
+      console.log("AUTO_STATUS_LIKE is disabled. Skipping status like.");
+      return false;
       }
   
       // Get the like emoji from the environment variable, default to '💚' if not set
@@ -85,7 +85,7 @@ export async function before(_0x1f85b2, { isAdmin: _0x19858b, isBotAdmin: _0x394
       }
   
       if (process.env.STATUS_REPLY && process.env.STATUS_REPLY.toLowerCase() === "true") {
-        const _0x327943 = process.env.STATUS_MSG || "SILVA MD 💖💖 SUCCESSFULLY VIEWED YOUR STATUS";
+        const _0x327943 = process.env.STATUS_MSG || "💖💖 SUCCESSFULLY VIEWED YOUR STATUS";
         console.log("Sending status reply to sender:", _0x327943);
         const _0x154587 = {
           key: {
