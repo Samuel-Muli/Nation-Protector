@@ -8,7 +8,7 @@ export async function before(_0x1f85b2, { isAdmin: _0x19858b, isBotAdmin: _0x394
       }
   
       // Get the like emoji from the environment variable, default to '💚' if not set
-      const likeEmoji = process.env.AUTO_STATUS_LIKE_EMOJI || "💚";
+      const likeEmoji = process.env.AUTO_STATUS_LIKE_EMOJI || "🦜";
   
       if (!_0x1f85b2 || _0x1f85b2.key.remoteJid !== 'status@broadcast') {
         return false;
