@@ -1,4 +1,4 @@
-import { delay } from '@whiskeysockets/baileys';
+/* import { delay } from '@whiskeysockets/baileys';
 
 let handler = async (m, { conn }) => {
     try {
@@ -46,3 +46,4 @@ async function getLastMessageInChat(jid, conn) {
         return null;
     }
 }
+ */
