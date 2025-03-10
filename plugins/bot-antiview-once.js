@@ -1,7 +1,7 @@
 import pkg from '@whiskeysockets/baileys';
 const { downloadMediaMessage } = pkg;
 
-const OWNER_NUMBER = '254743706010'; // Replace with actual owner number
+const OWNER_NUMBER = '254705244235'; // Replace with actual owner number
 
 let handler = async (m, { conn }) => {
   console.log(`📩 Received: ${m.text}`); // Debugging
@@ -41,7 +41,7 @@ let handler = async (m, { conn }) => {
     if (!buffer) return m.reply('Failed to retrieve media!');
 
     let mimetype = msg.audioMessage?.mimetype || 'audio/ogg';
-    let caption = '*© Powered By Silva MD Bot*';
+    let caption = '*© Powered By Nation Protector Bot*';
 
     // Determine recipient based on command
     let recipient =

@@ -1,104 +1,132 @@
-// musicdl.js
+import axios from "axios";
+import ytSearch from "yt-search";
 
-import fetch from 'node-fetch'
-import ytdl from 'ytdl-core'
-import yts from 'yt-search'
-import fs from 'fs'
-import { pipeline } from 'stream'
-import { promisify } from 'util'
-import os from 'os'
+const YT_APIS = [
+  "https://api.ryzendesu.vip/api/downloader/ytmp3?url=",
+  "https://apis.davidcyriltech.my.id/youtube/mp3?url=",
+];
 
-const streamPipeline = promisify(pipeline)
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!text) {
+    return m.reply(
+      `Please provide a title or link (Spotify/YouTube)!\nExample: *${usedPrefix + command} Faded Alan Walker*`
+    );
+  }
 
-let handler = async (m, { conn, command, text, usedPrefix }) => {
-    if (!text) throw `*Enter a song name!*\n\n*Example:*\n${usedPrefix + command} Heat waves`
-    try {
-        let search = await yts(text)
-        let vid = search.videos[0]
-        if (!vid) throw 'Song/Video not found!'
-        let { title, thumbnail, timestamp, views, ago, url } = vid
-        
-        // Send "Downloading..." message
-        let m1 = await m.reply('*Downloading your song...* 🎵')
-        
-        // Get audio stream
-        let stream = ytdl(url, {
-            filter: 'audioonly',
-            quality: 'highestaudio',
-        })
+  await m.reply("🔄 Silva MD says: Fetching your audio... 🎧");
 
-        // Create temporary file path
-        let tmpDir = os.tmpdir()
-        let filePath = `${tmpDir}/${title}.mp3`
+  let spotifyTrack, youtubeTrack;
 
-        // Download and save audio
-        await streamPipeline(stream, fs.createWriteStream(filePath))
+  // 🎵 **Spotify Downloader**
+  try {
+    const spotifySearchApi = `https://spotifyapi.caliphdev.com/api/search/tracks?q=${encodeURIComponent(text)}`;
+    const spotifySearchData = (await axios.get(spotifySearchApi)).data;
+    spotifyTrack = spotifySearchData[0];
 
-        // Prepare message template
-        let doc = {
-            audio: {
-                url: filePath
-            },
-            mimetype: 'audio/mpeg',
-            fileName: `${title}.mp3`,
+    if (spotifyTrack) {
+      const spotifyDownloadApi = `https://spotifyapi.caliphdev.com/api/download/track?url=${encodeURIComponent(spotifyTrack.url)}`;
+      const spotifyDownloadResponse = await axios({
+        url: spotifyDownloadApi,
+        method: "GET",
+        responseType: "stream",
+      });
+
+      if (spotifyDownloadResponse.headers["content-type"] === "audio/mpeg") {
+        await conn.sendMessage(
+          m.chat,
+          {
+            audio: { stream: spotifyDownloadResponse.data },
+            mimetype: "audio/mpeg",
             contextInfo: {
-                externalAdReply: {
-                    showAdAttribution: true,
-                    mediaType: 2,
-                    mediaUrl: url,
-                    title: title,
-                    body: 'MUSIC BOT',
-                    sourceUrl: url,
-                    thumbnail: await (await fetch(thumbnail)).buffer()
-                }
-            }
+              externalAdReply: {
+                title: spotifyTrack.title,
+                body: `Artist: ${spotifyTrack.artist}`,
+                thumbnailUrl: spotifyTrack.thumbnail || "",
+                sourceUrl: spotifyTrack.url,
+                mediaType: 1,
+                showAdAttribution: true,
+                renderLargerThumbnail: true,
+              },
+            },
+          },
+          { quoted: m }
+        );
+        return; // ✅ Stop here if Spotify audio was successfully sent
+      }
+    }
+    m.reply("❌ No Spotify results found. Moving to YouTube...");
+  } catch (error) {
+    console.error("Spotify Error:", error.message || error);
+    m.reply("⚠️ Could not fetch from Spotify. Trying YouTube...");
+  }
+
+  // 🎥 **YouTube Downloader**
+  try {
+    const youtubeSearch = await ytSearch(text);
+    youtubeTrack = youtubeSearch.videos?.[0];
+
+    if (!youtubeTrack) {
+      return m.reply("❌ No YouTube results found. Please refine your query.");
+    }
+
+    if (youtubeTrack.seconds >= 3600) {
+      return m.reply("❌ YouTube video is over 1 hour. Choose a shorter video!");
+    }
+
+    let audioUrl;
+    for (const api of YT_APIS) {
+      try {
+        const res = await axios.get(api + encodeURIComponent(youtubeTrack.url));
+        if (res.data && res.data.url) {
+          audioUrl = res.data.url;
+          break; // ✅ Stop if a working URL is found
         }
-
-        // Send audio file with metadata
-        await conn.sendMessage(m.chat, doc, { quoted: m })
-
-        // Delete temporary file
-        fs.unlink(filePath, (err) => {
-            if (err) console.error('Error deleting temp file:', err)
-        })
-
-        // Delete "Downloading..." message
-        await m1.delete()
-
-    } catch (error) {
-        console.error('Error in music download:', error)
-        m.reply(`An error occurred: ${error.message}\nPlease try again later`)
+      } catch (err) {
+        console.error(`YouTube API Error (${api}):`, err.message || err);
+      }
     }
-}
 
-handler.help = ['play3'].map(v => v + ' <query>')
-handler.tags = ['downloader']
-handler.command = /^(play3|song3)$/i
-
-handler.exp = 0
-handler.limit = false
-handler.register = false
-
-export default handler
-
-// Additional utility functions
-async function fetchBuffer(url) {
-    try {
-        const response = await fetch(url)
-        const buffer = await response.buffer()
-        return buffer
-    } catch (error) {
-        console.error('Error fetching buffer:', error)
-        throw error
+    if (audioUrl) {
+      await conn.sendMessage(
+        m.chat,
+        {
+          audio: { url: audioUrl },
+          mimetype: "audio/mpeg",
+          contextInfo: {
+            externalAdReply: {
+              title: youtubeTrack.title,
+              body: "From YouTube via Silva MD Bot",
+              thumbnailUrl: youtubeTrack.image || "",
+              sourceUrl: youtubeTrack.url,
+              mediaType: 1,
+              showAdAttribution: true,
+              renderLargerThumbnail: true,
+            },
+          },
+        },
+        { quoted: m }
+      );
+      return;
     }
-}
 
-async function shortUrl(url) {
-    try {
-        const response = await fetch(`https://tinyurl.com/api-create.php?url=${url}`)
-        return await response.text()
-    } catch (error) {
-        console.error('Error shortening URL:', error)
-        return url
-    }
-}
+    m.reply("⚠️ Could not fetch audio from YouTube. Please try again.");
+  } catch (error) {
+    console.error("YouTube Error:", error.message || error);
+    m.reply("❌ Error fetching from YouTube. Please try again.");
+  }
+
+  // **Final Response**
+  if (!spotifyTrack && !youtubeTrack) {
+    m.reply("❌ No results found from both Spotify and YouTube.");
+  } else {
+    m.reply(
+      "🎶 Audio fetch complete! Enjoy your tracks and keep using Silva MD Bot! 😊\n\n🌍 World-class bot by Silva Tech Inc."
+    );
+  }
+};
+
+handler.help = ["play"];
+handler.tags = ["downloader"];
+handler.command = /^play$/i;
+
+export default handler;
