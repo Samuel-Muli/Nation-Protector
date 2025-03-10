@@ -13,7 +13,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     );
   }
 
-  await m.reply("🔄 Silva MD says: Fetching your audio... 🎧");
+  await m.reply("Fetching your audio... 🎧");
 
   let spotifyTrack, youtubeTrack;
 
@@ -95,7 +95,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
           contextInfo: {
             externalAdReply: {
               title: youtubeTrack.title,
-              body: "From YouTube via Silva MD Bot",
+              body: "From YouTube",
               thumbnailUrl: youtubeTrack.image || "",
               sourceUrl: youtubeTrack.url,
               mediaType: 1,
@@ -120,7 +120,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     m.reply("❌ No results found from both Spotify and YouTube.");
   } else {
     m.reply(
-      "🎶 Audio fetch complete! Enjoy your tracks and keep using Silva MD Bot! 😊\n\n🌍 World-class bot by Silva Tech Inc."
+      "🎶 Audio fetch complete! Enjoy your tracks! 😊\n\n🌍 World-class bot by Silva Tech Inc."
     );
   }
 };
