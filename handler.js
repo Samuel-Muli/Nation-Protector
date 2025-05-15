@@ -8,8 +8,9 @@ import fetch from 'node-fetch'
 import Pino from 'pino'
 
 /**
- * @type {import("@whiskeysockets/baileys")}
+ * @type {import("baileys-pro")}
  */
+
 const isNumber = x => typeof x === 'number' && !isNaN(x)
 const delay = ms =>
   isNumber(ms) &&
@@ -25,7 +26,7 @@ const delay = ms =>
  * @param {import("@whiskeysockets/baileys").BaileysEventMap<unknown>["messages.upsert"]} groupsUpdate
  */
 const { getAggregateVotesInPollMessage, makeInMemoryStore } = await (
-  await import('@whiskeysockets/baileys')
+  await import('baileys-pro')
 ).default
 const store = makeInMemoryStore({
   logger: Pino().child({
@@ -491,9 +492,7 @@ export async function handler(chatUpdate) {
     } catch (e) {
       console.log(m, m.quoted, e)
     }
-    if (process.env.AUTO_READ === 'true') {
-      await conn.readMessages([m.key])
-    }
+    if (process.env.autoRead) await conn.readMessages([m.key])
     if (process.env.statusview && m.key.remoteJid === 'status@broadcast')
       await conn.readMessages([m.key])
   }
@@ -528,8 +527,8 @@ export async function participantsUpdate({ id, participants, action }) {
             ppgp = await this.profilePictureUrl(id, 'image')
           } catch (error) {
             console.error(`Error retrieving profile picture: ${error}`)
-            pp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
-            ppgp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
+            pp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
+            ppgp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
           } finally {
             let text = (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user')
               .replace('@group', await this.getName(id))
@@ -558,10 +557,10 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'Shotgun Suppressor',
+                    title: 'THE XLICON-BOT',
                     body: 'welcome to Group',
                     thumbnailUrl: welcomeApiUrl,
-                    sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
+                    sourceUrl: 'https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
                     mediaType: 1,
                     renderLargerThumbnail: true,
                   },
@@ -585,8 +584,8 @@ export async function participantsUpdate({ id, participants, action }) {
             ppgp = await this.profilePictureUrl(id, 'image')
           } catch (error) {
             console.error(`Error retrieving profile picture: ${error}`)
-            pp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
-            ppgp = 'https://qu.ax/SnaGx.jpg' // Assign default image URL
+            pp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
+            ppgp = 'https://i.imgur.com/8B4jwGq.jpeg' // Assign default image URL
           } finally {
             let text = (chat.sBye || this.bye || conn.bye || 'HELLO, @user').replace(
               '@user',
@@ -615,10 +614,10 @@ export async function participantsUpdate({ id, participants, action }) {
                 contextInfo: {
                   mentionedJid: [user],
                   externalAdReply: {
-                    title: 'Shotgun Suppressor',
+                    title: 'THE XLICON BOT',
                     body: 'Goodbye from  Group',
                     thumbnailUrl: leaveApiUrl,
-                    sourceUrl: 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0',
+                    sourceUrl: 'https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c',
                     mediaType: 1,
                     renderLargerThumbnail: true,
                   },
@@ -752,76 +751,36 @@ Delete Chat
  */
 export async function deleteUpdate(message) {
   try {
-    // Check if the anti-delete feature is disabled
     if (
       typeof process.env.antidelete === 'undefined' ||
-      process.env.antidelete.toLowerCase() === 'true'
+      process.env.antidelete.toLowerCase() === 'false'
     )
-      return;
+      return
 
-    const { fromMe, id, participant } = message;
-    if (fromMe) return; // Ignore messages sent by the bot itself
+    const { fromMe, id, participant } = message
+    if (fromMe) return
+    let msg = this.serializeM(this.loadMessage(id))
+    if (!msg) return
+    let chat = global.db.data.chats[msg.chat] || {}
 
-    let msg = this.serializeM(this.loadMessage(id)); // Load the deleted message
-    if (!msg) return; // Skip if the message is unavailable
-
-    // Send notification to the bot owner (conn.user.id)
     await this.reply(
       conn.user.id,
       `
-            ≡ Deleted Message Notification
-            ┌─⊷  𝘼𝙉𝙏𝙄-𝘿𝙀𝙇𝙀𝙏𝙀 
-            ▢ *Number:* @${participant.split`@`[0]} 
-            ▢ *Message Content:* ${msg.text || "Media/Unknown Content"}
+            ≡ deleted a message 
+            ┌─⊷  𝘼𝙉𝙏𝙄 𝘿𝙀𝙇𝙀𝙏𝙀 
+            ▢ *Number :* @${participant.split`@`[0]} 
             └─────────────
-      `.trim(),
+            `.trim(),
       msg,
       {
-        mentions: [participant], // Mention the user who deleted the message
-      }
-    );
-
-    // Forward the deleted message to the bot owner
-    await this.copyNForward(conn.user.id, msg, false).catch((e) => console.log(e, msg));
-  } catch (e) {
-    console.error("Error in deleteUpdate function:", e);
-  }
-}
-//view once messages
-
-export async function viewOnceUpdate(conn, message) {
-  try {
-    const { key, message: msgContent } = message;
-    if (!key) return;
-
-    const { remoteJid, fromMe, participant } = key;
-    if (fromMe) return; // Ignore messages sent by the bot itself
-
-    // Check if the message is a View Once message
-    let viewOnceMessage = msgContent?.viewOnceMessage?.message;
-    if (!viewOnceMessage) return; // Skip if it's not a View Once message
-
-    // Notify the bot owner
-    const botOwner = conn.user.id;
-    await conn.sendMessage(
-      botOwner,
-      {
-        text: `≡ *View Once Message Notification*\n` +
-              `┌─⊷  *VIEW ONCE MESSAGE*  \n` +
-              `▢ *Number:* @${participant.split`@`[0]} \n` +
-              `▢ *Message Content:* ${viewOnceMessage?.conversation || "Media/Unknown Content"}\n` +
-              `└─────────────`,
         mentions: [participant],
       }
-    );
-
-    // Forward the View Once message to the bot owner
-    await conn.forwardMessage(botOwner, message, {});
+    )
+    this.copyNForward(conn.user.id, msg, false).catch(e => console.log(e, msg))
   } catch (e) {
-    console.error("Error in viewOnceUpdate function:", e);
+    console.error(e)
   }
 }
-
 
 /*
  Polling Update 

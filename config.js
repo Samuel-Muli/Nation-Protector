@@ -7,12 +7,13 @@ import axios from 'axios'
 
 // Global variables
 global.owner = [
-  ['254705244235', '‖⫷※•şɐɱʉ•※⫸‖', true], 
+  ['254705244235', '꧁༒🖤⃕☽︎ＳⱥＭｕ☾⃕🖤︎༒꧂', true], 
+
 ] 
-//global.pairingNumber = '254705244xxx';    // put your whatapp number here if you want to get pr code instead of qr
-global.mods = [ '254705244235'] 
+
+global.mods = ['254705244235'] 
 global.prems = ['254705244235']
-global.allowed = ['254705244235' ]
+global.allowed = ['254705244235']
 global.keysZens = ['c2459db922', '37CC845916', '6fb0eff124']
 global.keysxxx = global.keysZens[Math.floor(global.keysZens.length * Math.random())]
 global.keysxteammm = ['29d4b59a4aa687ca', '5LTV57azwaid7dXfz5fzJu', 'cb15ed422c71a2fb', '5bd33b276d41d6b4', 'HIRO', 'kurrxd09', 'ebb6251cc00f9c63']
@@ -46,20 +47,20 @@ global.APIKeys = {
 }
 
 // Sticker WM
-global.botname = '‖⫷※•şɐɱʉ•※⫸‖'
+global.botname = '꧁༒🖤⃕☽︎ＳⱥＭｕ☾⃕🖤︎༒꧂'
 global.premium = 'true'
-global.packname = '‖⫷※•şɐɱʉ•※⫸‖' 
-global.author = '@Samuel Muli' 
-global.menuvid = 'https://telegra.ph/file/75ccac4f44375d552c60d.mp4'
-global.igfg = '▢✓ Follow Our channel\nhttps://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0' 
+global.packname = '꧁༒🖤⃕☽︎ＳⱥＭｕ☾⃕🖤︎༒꧂' 
+global.author = 'NationProtector' 
+global.menuvid = 'https://files.catbox.moe/yu3j54.mp4'
+global.igfg = '▢✓ Follow Our channel\nhttps://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0\n' 
 global.dygp = 'https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0'
 global.fgsc = 'https://github.com/Samuel-Muli/Nation-Protector' 
 global.fgyt = 'https://youtube.com/'
 global.fgpyp = 'https://youtube.com/'
-global.fglog = './samu1.jpg' 
-global.thumb = fs.readFileSync('./samu1.jpg')
+global.fglog = 'samu1.jpg' 
+global.thumb = fs.readFileSync('.samu1.jpg')
 
-global.wait = '*🕣 _‖⫷※•şɐɱʉ•※⫸‖ IS LOADING..._*\n*▰▰▰▱▱▱▱▱⭐*'
+global.wait = '*🕣 _꧁༒🖤⃕☽︎ＳⱥＭｕ☾⃕🖤︎༒꧂ IS LOADING..._*\n*▰▰▰▱▱▱▱▱⭐*'
 global.rwait = '⌛'
 global.dmoji = '🤭'
 global.done = '✔️'

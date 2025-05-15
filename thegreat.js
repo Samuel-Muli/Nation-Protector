@@ -37,10 +37,6 @@ import yargs from 'yargs'
 import CloudDBAdapter from './lib/cloudDBAdapter.js'
 import { MongoDB } from './lib/mongoDB.js'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
-//import { createRequire } from 'module';
-//const require = createRequire(import.meta.url);
-//const cheerio = require('cheerio');
-
 
 const {
   DisconnectReason,
@@ -65,7 +61,7 @@ async function main() {
   const txt = process.env.SESSION_ID
 
   if (!txt) {
-    console.error('Not session ID in .env please add or scan the QR in terminal.')
+    console.error('Environment variable not found.')
     return
   }
 
@@ -133,7 +129,6 @@ async function koala() {
 
 // Call the `koala` function to execute the logic
 koala();
-
 
 const pairingCode = !!global.pairingNumber || process.argv.includes('--pairing-code')
 const useQr = process.argv.includes('--qr')
@@ -300,7 +295,7 @@ if (pairingCode && !conn.authState.creds.registered) {
 
     if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
       console.log(
-        chalk.bgBlack(chalk.redBright("Start with your country's WhatsApp code, Example :254xxx"))
+        chalk.bgBlack(chalk.redBright("Start with your country's WhatsApp code, Example : 62xxx"))
       )
       process.exit(0)
     }
@@ -312,7 +307,7 @@ if (pairingCode && !conn.authState.creds.registered) {
 
     if (!Object.keys(PHONENUMBER_MCC).some(v => phoneNumber.startsWith(v))) {
       console.log(
-        chalk.bgBlack(chalk.redBright("Start with your country's WhatsApp code, Example :254xxx"))
+        chalk.bgBlack(chalk.redBright("Start with your country's WhatsApp code, Example : 62xxx"))
       )
 
       phoneNumber = await question(
@@ -339,11 +334,11 @@ if (!opts['test']) {
     setInterval(async () => {
       if (global.db.data) await global.db.write()
       if (opts['autocleartmp'] && (global.support || {}).find)
-      (tmp = [os.tmpdir(), 'tmp']),
-        tmp.forEach(filename =>
-        cp.spawn('find', [filename, '-amin', '5', '-type', 'f', '-delete'])
-        )
-    }, 5 * 60 * 1000)
+        (tmp = [os.tmpdir(), 'tmp']),
+          tmp.forEach(filename =>
+            cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])
+          )
+    }, 30 * 1000)
   }
 }
 
@@ -399,38 +394,22 @@ async function connectionUpdate(update) {
   if (!pairingCode && useQr && qr != 0 && qr != undefined) {
     conn.logger.info(chalk.yellow('\nLogging in....'))
   }
+  if (connection === 'open') {
+    const { jid, name } = conn.user
 
-        //check this one out in the next launch
-        let welcomeMessageSent = false;
+ const msg = `Hai🤩${name} Congrats you have successfully deployed xlicon-v2-BOT\nJoin my support Channel for any info\n https://whatsapp.com/channel/0029VaMGgVL3WHTNkhzHik3c`
 
-        if (connection === 'open' && !welcomeMessageSent) {
-            const { jid, name } = conn.user;
-            const msg = `Hi🤩${name} Congrats you have successfully deployed ‖⫷※•şɐɱʉ•※⫸‖ BOT\nJoin my support group for any Query\n https://chat.whatsapp.com/FV96nX6l7iCGmBeunOFPa0`;
+    await conn.sendMessage(jid, { text: msg, mentions: [jid] }, { quoted: null })
+    
+    conn.logger.info(chalk.yellow('\n🚩 R. E. A. D. Y'))
+  }
 
-            try {
-                await conn.sendMessage(jid, { text: msg, mentions: [jid] }, { quoted: null });
-                welcomeMessageSent = true;
-                conn.logger.info(chalk.greenBright('\n🟢 R E A D Y'));
-            } catch (error) {
-                conn.logger.error(chalk.red(`Failed to send welcome message: ${error.message}`));
-            }
-        }
+  if (connection == 'close') {
+    conn.logger.error(chalk.yellow(`\nconnection closed....Get a New Session`))
+  }
+}
 
-        if (connection === 'close') {
-            conn.logger.error(chalk.yellow(`\nconnection closed....Get a New Session`));
-            welcomeMessageSent = false; // Reset the flag when connection is closed
-        }
-
-        // Error handling for connection issues
-        process.on('unhandledRejection', (reason, promise) => {
-            conn.logger.error(chalk.red(`Unhandled Rejection at: ${promise}, reason: ${reason}`));
-        });
-
-        process.on('uncaughtException', (error) => {
-            conn.logger.error(chalk.red(`Uncaught Exception: ${error.message}`));
-        });
-        }
-
+process.on('uncaughtException', console.error)
 
 let isInit = true
 let handler = await import('./handler.js')
