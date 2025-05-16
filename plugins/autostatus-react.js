@@ -1,4 +1,4 @@
-let bot = {};
+/* let bot = {};
 try {
   bot = global.db.data.settings[conn.user.id] || {};
 } catch (e) {
@@ -29,4 +29,4 @@ async function handleStatusReaction(m, conn) {
 
 if (process.env.STATUSVIEW?.toLowerCase() === "true" || bot.statusview) {
   await handleStatusReaction(m, conn);
-}
+} */
