@@ -2,7 +2,8 @@ let bot = {};
 try {
   bot = global.db.data.settings[conn.user.id] || {};
 } catch (e) {
-  console.error("Failed to access bot settings:", e);
+  //console.error("Failed to access bot settings:", e);
+  console.log("something went wrong");
 }
 
 async function handleStatusReaction(m, conn) {
