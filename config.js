@@ -58,7 +58,7 @@ global.fgsc = 'https://github.com/Samuel-Muli/Nation-Protector'
 global.fgyt = 'https://youtube.com/'
 global.fgpyp = 'https://youtube.com/'
 global.fglog = 'samu1.jpg' 
-global.thumb = fs.readFileSync('.samu1.jpg')
+global.thumb = fs.readFileSync('samu1.jpg')
 
 global.wait = '*🕣 _꧁༒🖤⃕☽︎ＳⱥＭｕ☾⃕🖤︎༒꧂ IS LOADING..._*\n*▰▰▰▱▱▱▱▱⭐*'
 global.rwait = '⌛'
